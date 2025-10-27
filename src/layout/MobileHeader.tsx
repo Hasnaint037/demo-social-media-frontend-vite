@@ -1,4 +1,3 @@
-"use client";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { PanelLeftIcon } from "lucide-react";
 
