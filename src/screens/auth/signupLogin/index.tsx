@@ -12,7 +12,7 @@ interface SignupFormValues {
 function Signup() {
  const [isSignup, setIsSignup]= useState<boolean>(true);
 
-const form = useForm<SignupFormValues>({
+const form = useForm<SignupFormValues>({ 
   defaultValues: isSignup
     ? { fullName: "", email: "", password: "" } 
     : { email: "", password: "" },
