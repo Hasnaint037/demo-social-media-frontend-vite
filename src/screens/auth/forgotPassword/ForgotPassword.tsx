@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AUTH_PATHS } from "@/routes/paths/authPaths";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 interface ForgotPasswordFormValues {
   email: string;
@@ -53,11 +55,12 @@ function ForgotPassword() {
 
         <p className="text-center text-sm text-gray-600 mt-4">
           Remember your password?{" "}
-          <span
+          <Link
+          to={AUTH_PATHS.LOGIN}
             className="text-blue-500 font-medium hover:underline"
           >
             Login
-          </span>
+          </Link>
         </p>
       </div>
     </div>

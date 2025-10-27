@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { AUTH_PATHS } from "@/routes/paths/authPaths";
 
 interface SignupFormValues {
   fullName: string;
@@ -10,7 +12,8 @@ interface SignupFormValues {
 }
 
 function Signup() {
- const [isSignup, setIsSignup]= useState<boolean>(true);
+  const location=useLocation();
+ const [isSignup, setIsSignup]= useState<boolean>(location.pathname===AUTH_PATHS.SIGNUP?true:false);
 
 const form = useForm<SignupFormValues>({ 
   defaultValues: isSignup
