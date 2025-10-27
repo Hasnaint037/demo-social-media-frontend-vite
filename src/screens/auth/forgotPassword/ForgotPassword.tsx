@@ -46,7 +46,7 @@ function ForgotPassword() {
             }}
           />
 
-          <Button type="submit" className="w-full h-11">
+          <Button type="submit" className="mt-2">
             Send Reset Link
           </Button>
         </form>
@@ -54,7 +54,6 @@ function ForgotPassword() {
         <p className="text-center text-sm text-gray-600 mt-4">
           Remember your password?{" "}
           <span
-            // href="/login"
             className="text-blue-500 font-medium hover:underline"
           >
             Login
