@@ -1,9 +1,9 @@
-import { useForm } from "react-hook-form"
+import Signup from "./screens/auth/signup"
 
 function App() {
-  const form=useForm();
   return (
-    <div>App Component
+    <div>
+      <Signup/>
     </div>
   )
 }

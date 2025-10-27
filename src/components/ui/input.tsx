@@ -1,13 +1,12 @@
 import * as React from "react";
 import type {
   UseFormReturn,
-  FieldValues,
   RegisterOptions,
 } from "react-hook-form";
 
 interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "form"> {
-  form: UseFormReturn<FieldValues>;
+  form: UseFormReturn<any>;
   registerName: string;
   registerOptions?: RegisterOptions;
   label?: string;
