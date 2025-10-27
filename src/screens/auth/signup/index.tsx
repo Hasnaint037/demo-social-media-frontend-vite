@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface SignupFormValues {
   fullName: string;
@@ -9,13 +10,13 @@ interface SignupFormValues {
 }
 
 function Signup() {
-  const form = useForm<SignupFormValues>({
-    defaultValues: {
-      fullName: "",
-      email: "",
-      password: "",
-    },
-  });
+ const [isSignup, setIsSignup]= useState<boolean>(true);
+
+const form = useForm<SignupFormValues>({
+  defaultValues: isSignup
+    ? { fullName: "", email: "", password: "" } 
+    : { email: "", password: "" },
+});
 
   const {
     handleSubmit,
@@ -33,9 +34,14 @@ function Signup() {
         className="w-full max-w-md bg-white shadow-md rounded-lg p-6 space-y-5"
       >
         <h2 className="text-2xl font-semibold text-center text-gray-800">
-          Create an Account
+          {
+            isSignup?"Create an ":"Login to your "
+          }
+          Account
         </h2>
 
+        {
+          isSignup&&
         <Input
           form={form}
           label="Full Name"
@@ -46,6 +52,7 @@ function Signup() {
           }}
           placeholder="Enter your full name"
         />
+        }
 
         <Input
           form={form}
@@ -76,21 +83,27 @@ function Signup() {
 
         <Button
           type="submit"
-          className="w-full"
+          className="w-full mt-2"
           variant="blue"
           loading={isSubmitting}
         >
-          Sign Up
+          {
+            isSignup?"Signup":"Login"
+          }
         </Button>
 
         <p className="text-sm text-center text-gray-600">
-          Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-blue-500 hover:underline font-medium"
+          {
+            isSignup?" Already have an account?":"Do not have an account?"
+          }
+          <span
+            className="text-blue-500 hover:underline font-medium cursor-pointer"
+            onClick={()=>setIsSignup(!isSignup)}
           >
-            Login
-          </a>
+            {
+              isSignup?"Login":"Signup"
+            }
+          </span>
         </p>
       </form>
     </div>
