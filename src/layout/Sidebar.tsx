@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Calendar, Home, Inbox, Search } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Sidebar, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -6,6 +6,7 @@ import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 const items = [
   { title: "Homes", url: "/", icon: Home },
@@ -17,6 +18,24 @@ const items = [
 export function AppSidebar() {
   const location = useLocation();
   const [openPopover, setOpenPopover] = useState(false);
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure",
+      text: "Do you want to logout?",
+      showCancelButton: true,
+      denyButtonText: "Cancel",
+      width: "30em",
+      confirmButtonText: "Logout",
+      confirmButtonColor: "#51A2FF",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log("Logout successful");
+      } else if (result.isDenied) {
+        console.log("Logout cancelled");
+      }
+    });
+  };
 
   return (
     <Sidebar>
@@ -81,7 +100,7 @@ export function AppSidebar() {
               <Button
                 variant="outline"
                 className="text-left px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-500"
-                onClick={() => setOpenPopover(false)}
+                onClick={handleLogout}
               >
                 Logout
               </Button>
