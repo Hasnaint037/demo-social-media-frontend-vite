@@ -5,9 +5,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
 
 function SearchUser() {
   const form = useForm();
+  const navigate = useNavigate();
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
   const [searchText, setSearchText] = useState("");
 
@@ -90,6 +93,14 @@ function SearchUser() {
               <Card
                 key={user.id}
                 className="rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 cursor-pointer"
+                onClick={() =>
+                  navigate(
+                    PROTECTED_PATHS.USERS.PROFILE.replace(
+                      ":userId",
+                      user.id.toString()
+                    )
+                  )
+                }
               >
                 <CardContent className="flex flex-col items-center text-center p-6 space-y-3">
                   <Avatar className="w-20 h-20">

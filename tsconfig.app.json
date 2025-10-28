@@ -30,5 +30,5 @@
       ]
     }
   },
-  "include": ["src", "config.ts", "src/routes/components.ts"]
+  "include": ["src", "src/routes/config.ts", "src/screens/components.ts"]
 }

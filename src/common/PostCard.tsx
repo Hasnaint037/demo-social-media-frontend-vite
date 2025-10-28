@@ -33,7 +33,7 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({
   post,
-  canShare = false,
+  canShare = true,
   canDelete = false,
   onDelete,
 }) => {
@@ -77,7 +77,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 rounded-xl overflow-hidden mb-3">
-        {(showAllImages ? imgs : imgs.slice(0, 4)).map((img, i) => (
+        {(showAllImages ? imgs : imgs.slice(0, 2)).map((img, i) => (
           <img
             key={i}
             src={img}
@@ -90,7 +90,7 @@ const PostCard: React.FC<PostCardProps> = ({
             onClick={() => setShowAllImages(true)}
             className="bg-black bg-opacity-50 text-white text-sm rounded-lg p-2"
           >
-            +{imgs.length - 4} more
+            +{imgs.length - 2} more
           </button>
         )}
       </div>

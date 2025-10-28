@@ -1,6 +1,6 @@
-import { AUTH_PATHS } from "./src/routes/paths/authPaths";
-import { ROUTE_COMPONENTS } from "./src/routes/components";
-import { PROTECTED_PATHS } from "./src/routes/paths/protectedPaths";
+import { AUTH_PATHS } from "./paths/authPaths";
+import { ROUTE_COMPONENTS } from "../screens/components";
+import { PROTECTED_PATHS } from "./paths/protectedPaths";
 
 export const ROUTE_CONFIG = {
   AUTH: [
@@ -28,6 +28,10 @@ export const ROUTE_CONFIG = {
     {
       path: PROTECTED_PATHS.POSTS.MY_POSTS,
       component: ROUTE_COMPONENTS.MY_POSTS,
+    },
+    {
+      path: PROTECTED_PATHS.USERS.PROFILE,
+      component: ROUTE_COMPONENTS.USER_DEATIL,
     },
   ],
 };

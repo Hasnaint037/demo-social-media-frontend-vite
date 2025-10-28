@@ -12,7 +12,12 @@ import { showConfirmAlert } from "@/assets/alerts/sweetalert";
 
 const items = [
   { title: "Home", url: "/", icon: Home },
-  { title: "Search Users", url: PROTECTED_PATHS.USERS.SEARCH, icon: Search },
+  {
+    title: "Search Users",
+    url: PROTECTED_PATHS.USERS.SEARCH,
+    icon: Search,
+    PATHLISTS: ["/users"],
+  },
   { title: "New Post", url: PROTECTED_PATHS.POSTS.CREATE, icon: PlusSquare },
   {
     title: "My Posts",
@@ -48,7 +53,9 @@ export function AppSidebar() {
       <div className="h-full flex flex-col justify-between">
         <div className="h-full overflow-auto mb-2">
           {items.map((item) => {
-            const isActive = location.pathname === item.url;
+            const isActive =
+              location.pathname === item.url ||
+              item.PATHLISTS?.some((path) => location.pathname.includes(path));
             return (
               <SidebarMenuItem
                 key={item.title}

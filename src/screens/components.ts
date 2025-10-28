@@ -10,6 +10,7 @@ const ForgotPassword = lazy(
 const SearchUser = lazy(() => import("@/screens/user/SearchUser"));
 const CreatePost = lazy(() => import("@/screens/post/CreatePost"));
 const MyPosts = lazy(() => import("@/screens/user/MyPosts"));
+const UserDetail = lazy(() => import("@/screens/user/UserDetail"));
 
 export const ROUTE_COMPONENTS = {
   SIGNUP: Signup,
@@ -19,4 +20,5 @@ export const ROUTE_COMPONENTS = {
   SEARCH_USER: SearchUser,
   CREATE_POST: CreatePost,
   MY_POSTS: MyPosts,
+  USER_DEATIL: UserDetail,
 };
