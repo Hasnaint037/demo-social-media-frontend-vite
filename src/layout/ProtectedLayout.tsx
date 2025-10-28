@@ -10,7 +10,7 @@ const ProtectedLayout: React.FC = () => {
       <MobileHeader />
       <div className="flex min-h-screen">
         <AppSidebar />
-        <main className="flex-1 p-4">
+        <main className="flex-1 p-4 h-screen overflow-auto">
           <Outlet />
         </main>
       </div>

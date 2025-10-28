@@ -9,6 +9,7 @@ const ForgotPassword = lazy(
 );
 const SearchUser = lazy(() => import("@/screens/user/SearchUser"));
 const CreatePost = lazy(() => import("@/screens/post/CreatePost"));
+const MyPosts = lazy(() => import("@/screens/user/MyPosts"));
 
 export const ROUTE_COMPONENTS = {
   SIGNUP: Signup,
@@ -17,4 +18,5 @@ export const ROUTE_COMPONENTS = {
   HOME: Home,
   SEARCH_USER: SearchUser,
   CREATE_POST: CreatePost,
+  MY_POSTS: MyPosts,
 };

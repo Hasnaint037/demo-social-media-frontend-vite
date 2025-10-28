@@ -25,5 +25,9 @@ export const ROUTE_CONFIG = {
       path: PROTECTED_PATHS.CREATE_POST,
       component: ROUTE_COMPONENTS.CREATE_POST,
     },
+    {
+      path: PROTECTED_PATHS.MY_POSTS,
+      component: ROUTE_COMPONENTS.MY_POSTS,
+    },
   ],
 };

@@ -16,7 +16,7 @@ const items = [
   { title: "New Post", url: PROTECTED_PATHS.CREATE_POST, icon: PlusSquare },
   {
     title: "My Posts",
-    url: "/my-posts",
+    url: PROTECTED_PATHS.MY_POSTS,
     icon: FileText,
   },
 ];
