@@ -41,7 +41,7 @@ const Textarea: React.FC<TextareaProps> = ({
       {label && (
         <label className="font-medium text-gray-700">
           {label}
-          {required && <span className="text-red-300 ml-1">*</span>}
+          {required && <span className="text-red-300">*</span>}
         </label>
       )}
 
