@@ -53,7 +53,6 @@ const CreatePost: React.FC = () => {
   return (
     <div className="bg-white dark:bg-gray-900 p-4 rounded-2xl shadow mb-6">
       <div className="flex items-start gap-3">
-        {/* Avatar */}
         <Avatar>
           <AvatarImage src={user.avatar} />
           <AvatarFallback>{user.name?.[0] || "U"}</AvatarFallback>

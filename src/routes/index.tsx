@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { ROUTE_CONFIG } from "./config.ts";
-import NotFound from "@/common/NotFound";
+import NotFound from "@/components/common/NotFound.tsx";
 import ProtectedRoute from "./ProtectedRoute";
-import LoadingFallback from "@/common/LoadingFallback";
-import ProtectedLayout from "@/layout/ProtectedLayout.tsx";
+import LoadingFallback from "@/components/common/LoadingFallback.tsx";
+import ProtectedLayout from "@/layout/index.tsx";
 
 const AppRoutes = () => {
   return (

@@ -8,7 +8,7 @@ interface ForgotPasswordFormValues {
   email: string;
 }
 
-function ForgotPassword() {
+const ForgotPassword = () => {
   const form = useForm<ForgotPasswordFormValues>({
     defaultValues: {
       email: "",
@@ -26,7 +26,8 @@ function ForgotPassword() {
           Forgot Password?
         </h2>
         <p className="text-center text-gray-500 mb-6 text-sm">
-          Enter your email address below and we’ll send you a link to reset your password.
+          Enter your email address below and we’ll send you a link to reset your
+          password.
         </p>
 
         <form
@@ -56,7 +57,7 @@ function ForgotPassword() {
         <p className="text-center text-sm text-gray-600 mt-4">
           Remember your password?{" "}
           <Link
-          to={AUTH_PATHS.LOGIN}
+            to={AUTH_PATHS.LOGIN}
             className="text-blue-500 font-medium hover:underline"
           >
             Login
@@ -65,6 +66,6 @@ function ForgotPassword() {
       </div>
     </div>
   );
-}
+};
 
 export default ForgotPassword;

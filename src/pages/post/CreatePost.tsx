@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
-function CreatePost() {
+const CreatePost = () => {
   const form = useForm();
   const [images, setImages] = useState<string[]>([]);
 
@@ -104,6 +104,6 @@ function CreatePost() {
       </form>
     </div>
   );
-}
+};
 
 export default CreatePost;

@@ -2,9 +2,9 @@ import { useParams } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import PostCard from "@/common/PostCard";
+import PostCard from "@/components/common/PostCard";
 
-function UserDetail() {
+const UserDetail = () => {
   const { userId } = useParams();
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -78,6 +78,6 @@ function UserDetail() {
       </div>
     </div>
   );
-}
+};
 
 export default UserDetail;

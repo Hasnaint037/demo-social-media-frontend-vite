@@ -8,7 +8,7 @@ import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
 
-function SearchUser() {
+const SearchUser = () => {
   const form = useForm();
   const navigate = useNavigate();
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
@@ -126,6 +126,6 @@ function SearchUser() {
       )}
     </div>
   );
-}
+};
 
 export default SearchUser;

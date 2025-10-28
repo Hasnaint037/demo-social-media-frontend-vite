@@ -1,7 +1,7 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { PanelLeftIcon } from "lucide-react";
 
-export function MobileHeader() {
+const MobileHeader = () => {
   return (
     <header className="flex items-center gap-3 p-4 bg-white shadow md:hidden">
       <SidebarTrigger>
@@ -10,4 +10,6 @@ export function MobileHeader() {
       <h1 className="text-lg font-bold">My App</h1>
     </header>
   );
-}
+};
+
+export default MobileHeader;

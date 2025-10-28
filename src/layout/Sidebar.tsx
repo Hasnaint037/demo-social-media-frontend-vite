@@ -26,7 +26,7 @@ const items = [
   },
 ];
 
-export function AppSidebar() {
+const AppSidebar = () => {
   const location = useLocation();
   const [openPopover, setOpenPopover] = useState(false);
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
@@ -136,4 +136,6 @@ export function AppSidebar() {
       )}
     </Sidebar>
   );
-}
+};
+
+export default AppSidebar;

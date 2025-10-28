@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "./Sidebar";
-import { MobileHeader } from "./MobileHeader";
+import AppSidebar from "./Sidebar";
+import MobileHeader from "./MobileHeader";
 
 const ProtectedLayout: React.FC = () => {
   return (

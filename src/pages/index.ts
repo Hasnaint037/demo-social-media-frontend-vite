@@ -1,12 +1,8 @@
 import { lazy } from "react";
 const Signup = lazy(() => import("@/pages/auth/signupLogin"));
 const Home = lazy(() => import("@/pages/home"));
-const ResetPassword = lazy(
-  () => import("@/pages/auth/forgotPassword/ResetPassword")
-);
-const ForgotPassword = lazy(
-  () => import("@/pages/auth/forgotPassword/ForgotPassword")
-);
+const ResetPassword = lazy(() => import("@/pages/auth/resetPassword.tsx"));
+const ForgotPassword = lazy(() => import("@/pages/auth/forgotPassword"));
 const SearchUser = lazy(() => import("@/pages/user/SearchUser"));
 const CreatePost = lazy(() => import("@/pages/post/CreatePost"));
 const MyPosts = lazy(() => import("@/pages/user/MyPosts"));

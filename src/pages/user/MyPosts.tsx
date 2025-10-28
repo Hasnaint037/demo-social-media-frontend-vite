@@ -1,7 +1,7 @@
-import CreatePost from "@/common/CreatePost";
-import PostCard from "@/common/PostCard";
+import CreatePost from "@/components/common/CreatePost";
+import PostCard from "@/components/common/PostCard";
 
-function MyPosts() {
+const MyPosts = () => {
   const posts = [
     {
       _id: "1",
@@ -72,6 +72,6 @@ function MyPosts() {
       )}
     </div>
   );
-}
+};
 
 export default MyPosts;

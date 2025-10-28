@@ -7,7 +7,7 @@ interface ResetPasswordFormValues {
   confirmPassword: string;
 }
 
-function ResetPassword() {
+const ResetPassword = () => {
   const form = useForm<ResetPasswordFormValues>({
     defaultValues: {
       newPassword: "",
@@ -71,6 +71,6 @@ function ResetPassword() {
       </div>
     </div>
   );
-}
+};
 
 export default ResetPassword;
