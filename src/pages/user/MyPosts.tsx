@@ -1,3 +1,4 @@
+import CreatePost from "@/common/CreatePost";
 import PostCard from "@/common/PostCard";
 
 function MyPosts() {
@@ -50,7 +51,7 @@ function MyPosts() {
         avatar: "https://randomuser.me/api/portraits/men/32.jpg",
       },
       content: "Minimalism in UI design makes everything cleaner ✨",
-      images: ["https://images.unsplash.com/photo-1635776063210-fdbdd06aa0d1"],
+      images: ["https://images.unsplash.com/photo-1633356122544-f134324a6cee"],
       createdAt: "2025-10-25T18:45:00Z",
       likes: 22,
       comments: 2,
@@ -59,6 +60,7 @@ function MyPosts() {
 
   return (
     <div className="max-w-2xl mx-auto mt-4 px-3">
+      <CreatePost />
       {posts.length > 0 ? (
         posts.map((post) => (
           <PostCard key={post._id} post={post} canShare canDelete />

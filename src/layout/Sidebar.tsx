@@ -6,7 +6,7 @@ import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import Profile from "@/screens/user/Profile";
+import Profile from "@/pages/user/Profile";
 import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
 import { showConfirmAlert } from "@/assets/alerts/sweetalert";
 

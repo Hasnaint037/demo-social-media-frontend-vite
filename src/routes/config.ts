@@ -1,5 +1,5 @@
 import { AUTH_PATHS } from "./paths/authPaths";
-import { ROUTE_COMPONENTS } from "../screens/components";
+import { ROUTE_COMPONENTS } from "../pages";
 import { PROTECTED_PATHS } from "./paths/protectedPaths";
 
 export const ROUTE_CONFIG = {

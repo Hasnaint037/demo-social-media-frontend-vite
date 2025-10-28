@@ -1,3 +1,4 @@
+import CreatePost from "@/common/CreatePost";
 import PostCard from "@/common/PostCard";
 
 const Home = () => {
@@ -58,6 +59,7 @@ const Home = () => {
       <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
         Welcome to your Feed 👋
       </h1>
+      <CreatePost />
       <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
         Discover what people are sharing and stay connected with the latest
         posts.
