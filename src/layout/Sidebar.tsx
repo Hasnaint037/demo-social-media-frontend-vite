@@ -6,17 +6,17 @@ import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import Swal from "sweetalert2";
 import Profile from "@/screens/user/Profile";
 import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
+import { showConfirmAlert } from "@/assets/alerts/sweetalert";
 
 const items = [
   { title: "Home", url: "/", icon: Home },
-  { title: "Search Users", url: PROTECTED_PATHS.SEARCH_USER, icon: Search },
-  { title: "New Post", url: PROTECTED_PATHS.CREATE_POST, icon: PlusSquare },
+  { title: "Search Users", url: PROTECTED_PATHS.USERS.SEARCH, icon: Search },
+  { title: "New Post", url: PROTECTED_PATHS.POSTS.CREATE, icon: PlusSquare },
   {
     title: "My Posts",
-    url: PROTECTED_PATHS.MY_POSTS,
+    url: PROTECTED_PATHS.POSTS.MY_POSTS,
     icon: FileText,
   },
 ];
@@ -27,22 +27,15 @@ export function AppSidebar() {
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [isViewMode, setIsViewMode] = useState(false);
 
-  const handleLogout = () => {
-    Swal.fire({
+  const handleLogout = async () => {
+    const confirmed = await showConfirmAlert({
       title: "Are you sure",
       text: "Do you want to logout?",
-      showCancelButton: true,
-      denyButtonText: "Cancel",
-      width: "30em",
       confirmButtonText: "Logout",
-      confirmButtonColor: "#51A2FF",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        console.log("Logout successful");
-      } else if (result.isDenied) {
-        console.log("Logout cancelled");
-      }
     });
+    if (confirmed) {
+      console.log("logout");
+    }
   };
 
   const handleOpenProfileDialog = () => {

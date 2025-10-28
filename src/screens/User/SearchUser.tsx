@@ -89,7 +89,7 @@ function SearchUser() {
             filteredUsers.map((user) => (
               <Card
                 key={user.id}
-                className="rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200"
+                className="rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 cursor-pointer"
               >
                 <CardContent className="flex flex-col items-center text-center p-6 space-y-3">
                   <Avatar className="w-20 h-20">

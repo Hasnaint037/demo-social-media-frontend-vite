@@ -18,15 +18,15 @@ export const ROUTE_CONFIG = {
   PROTECTED: [
     { path: PROTECTED_PATHS.HOME, component: ROUTE_COMPONENTS.HOME },
     {
-      path: PROTECTED_PATHS.SEARCH_USER,
+      path: PROTECTED_PATHS.USERS.SEARCH,
       component: ROUTE_COMPONENTS.SEARCH_USER,
     },
     {
-      path: PROTECTED_PATHS.CREATE_POST,
+      path: PROTECTED_PATHS.POSTS.CREATE,
       component: ROUTE_COMPONENTS.CREATE_POST,
     },
     {
-      path: PROTECTED_PATHS.MY_POSTS,
+      path: PROTECTED_PATHS.POSTS.MY_POSTS,
       component: ROUTE_COMPONENTS.MY_POSTS,
     },
   ],

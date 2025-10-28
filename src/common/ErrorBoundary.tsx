@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button"
-import { Component,type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { Component, type ReactNode } from "react";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
-  fallback?: ReactNode; 
+  fallback?: ReactNode;
 }
 
 interface ErrorBoundaryState {
@@ -21,7 +21,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     return { hasError: true, error };
   }
 
-   handleReload = () => {
+  handleReload = () => {
     window.location.reload();
   };
 
@@ -32,9 +32,9 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     if (hasError) {
       if (fallback) return fallback;
       return (
-       <div
+        <div
           className="flex flex-col items-center justify-center h-screen text-center px-6
-            bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-950"
+            bg-linear-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-950"
         >
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 max-w-md w-full border border-blue-100 dark:border-gray-700">
             <div className="flex flex-col items-center gap-4">
@@ -59,7 +59,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
                 Oops! Something went wrong
               </h1>
               <p className="text-gray-500 dark:text-gray-400 text-sm">
-                We encountered an unexpected error. Please try refreshing the page.
+                We encountered an unexpected error. Please try refreshing the
+                page.
               </p>
 
               <Button

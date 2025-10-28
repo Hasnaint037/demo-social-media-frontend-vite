@@ -60,7 +60,9 @@ function MyPosts() {
   return (
     <div className="max-w-2xl mx-auto mt-4 px-3">
       {posts.length > 0 ? (
-        posts.map((post) => <PostCard key={post._id} post={post} canShare />)
+        posts.map((post) => (
+          <PostCard key={post._id} post={post} canShare canDelete />
+        ))
       ) : (
         <p className="text-center text-gray-500 mt-8">
           You haven’t created any posts yet.
