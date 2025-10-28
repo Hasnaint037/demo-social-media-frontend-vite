@@ -6,9 +6,14 @@ import { useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 
-function Profile() {
+interface ProfileProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  isViewMode: boolean;
+}
+
+const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
   const form = useForm();
-  const [open, setOpen] = useState(true);
   const [preview, setPreview] = useState<string | null>(null);
   const { handleSubmit } = form;
 
@@ -26,7 +31,11 @@ function Profile() {
   };
 
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
+    <Dialog
+      open={open}
+      onClose={() => setOpen(false)}
+      showCloseIcon={isViewMode}
+    >
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-6 items-center sm:items-stretch"
@@ -37,66 +46,77 @@ function Profile() {
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
 
-          <label
-            htmlFor="avatar"
-            className="cursor-pointer text-sm font-medium text-blue-600 hover:underline"
-          >
-            Change Picture
-          </label>
+          {!isViewMode && (
+            <label
+              htmlFor="avatar"
+              className="cursor-pointer text-sm font-medium text-blue-600 hover:underline"
+            >
+              Change Picture
+            </label>
+          )}
           <input
             id="avatar"
             type="file"
             accept="image/*"
             className="hidden"
             onChange={handleImageChange}
+            disabled={isViewMode}
           />
         </div>
 
         <div className="w-full">
           <Input
             form={form}
+            required={!isViewMode}
             label="Name"
             registerName="name"
             id="name"
             type="text"
             placeholder="Enter your name"
+            disabled={isViewMode}
           />
         </div>
 
         <div className="w-full">
           <Input
             form={form}
+            required={!isViewMode}
             label="Email"
             registerName="email"
             id="email"
             type="email"
             placeholder="Enter your email"
+            disabled={isViewMode}
           />
         </div>
 
         <div className="w-full">
           <Textarea
             label="Bio"
+            required={!isViewMode}
             form={form}
             registerName="bio"
             id="bio"
             placeholder="Write something about yourself..."
+            disabled={isViewMode}
           />
         </div>
 
-        <div className="flex justify-end w-full gap-3 pt-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setOpen(false)}
-          >
-            Cancel
-          </Button>
-          <Button type="submit">Save Changes</Button>
-        </div>
+        {!isViewMode && (
+          <div className="flex justify-end w-full gap-3 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit">Save Changes</Button>
+          </div>
+        )}
       </form>
     </Dialog>
   );
-}
+};
 
 export default Profile;

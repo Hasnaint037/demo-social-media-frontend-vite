@@ -7,6 +7,7 @@ import { PopoverContent } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import Profile from "@/screens/User/Profile";
 
 const items = [
   { title: "Homes", url: "/", icon: Home },
@@ -18,6 +19,8 @@ const items = [
 export function AppSidebar() {
   const location = useLocation();
   const [openPopover, setOpenPopover] = useState(false);
+  const [openProfileDialog, setOpenProfileDialog] = useState(false);
+  const [isViewMode, setIsViewMode] = useState(false);
 
   const handleLogout = () => {
     Swal.fire({
@@ -35,6 +38,11 @@ export function AppSidebar() {
         console.log("Logout cancelled");
       }
     });
+  };
+
+  const handleOpenProfileDialog = () => {
+    setOpenProfileDialog(!openProfileDialog);
+    setOpenPopover(false);
   };
 
   return (
@@ -86,14 +94,20 @@ export function AppSidebar() {
               <Button
                 variant="outline"
                 className="text-left px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-500"
-                onClick={() => setOpenPopover(false)}
+                onClick={() => {
+                  setIsViewMode(true);
+                  handleOpenProfileDialog();
+                }}
               >
                 View Profile
               </Button>
               <Button
                 variant="outline"
                 className="text-left px-3 py-2 rounded hover:bg-blue-100 hover:text-blue-500"
-                onClick={() => setOpenPopover(false)}
+                onClick={() => {
+                  setIsViewMode(false);
+                  handleOpenProfileDialog();
+                }}
               >
                 Edit Profile
               </Button>
@@ -108,6 +122,13 @@ export function AppSidebar() {
           </PopoverContent>
         </Popover>
       </div>
+      {openProfileDialog && (
+        <Profile
+          open={openProfileDialog}
+          setOpen={setOpenProfileDialog}
+          isViewMode={isViewMode}
+        />
+      )}
     </Sidebar>
   );
 }
