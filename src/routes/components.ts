@@ -7,10 +7,14 @@ const ResetPassword = lazy(
 const ForgotPassword = lazy(
   () => import("@/screens/auth/forgotPassword/ForgotPassword")
 );
+const SearchUser = lazy(() => import("@/screens/user/SearchUser"));
+const CreatePost = lazy(() => import("@/screens/post/CreatePost"));
 
 export const ROUTE_COMPONENTS = {
   SIGNUP: Signup,
   FORGOT_PASSWORD: ForgotPassword,
   RESET_PASSWORD: ResetPassword,
   HOME: Home,
+  SEARCH_USER: SearchUser,
+  CREATE_POST: CreatePost,
 };

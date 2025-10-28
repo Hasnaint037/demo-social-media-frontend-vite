@@ -15,5 +15,15 @@ export const ROUTE_CONFIG = {
       component: ROUTE_COMPONENTS.RESET_PASSWORD,
     },
   ],
-  PROTECTED: [{ path: PROTECTED_PATHS.HOME, component: ROUTE_COMPONENTS.HOME }],
+  PROTECTED: [
+    { path: PROTECTED_PATHS.HOME, component: ROUTE_COMPONENTS.HOME },
+    {
+      path: PROTECTED_PATHS.SEARCH_USER,
+      component: ROUTE_COMPONENTS.SEARCH_USER,
+    },
+    {
+      path: PROTECTED_PATHS.CREATE_POST,
+      component: ROUTE_COMPONENTS.CREATE_POST,
+    },
+  ],
 };

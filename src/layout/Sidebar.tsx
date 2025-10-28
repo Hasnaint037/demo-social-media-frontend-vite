@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search } from "lucide-react";
+import { Home, Search, PlusSquare, FileText } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Sidebar, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -7,13 +7,18 @@ import { PopoverContent } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import Profile from "@/screens/User/Profile";
+import Profile from "@/screens/user/Profile";
+import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
 
 const items = [
-  { title: "Homes", url: "/", icon: Home },
-  { title: "Inbox", url: "/inbox", icon: Inbox },
-  { title: "Calendar", url: "/calendar", icon: Calendar },
-  { title: "Search", url: "/search", icon: Search },
+  { title: "Home", url: "/", icon: Home },
+  { title: "Search Users", url: PROTECTED_PATHS.SEARCH_USER, icon: Search },
+  { title: "New Post", url: PROTECTED_PATHS.CREATE_POST, icon: PlusSquare },
+  {
+    title: "My Posts",
+    url: "/my-posts",
+    icon: FileText,
+  },
 ];
 
 export function AppSidebar() {
