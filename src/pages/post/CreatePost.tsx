@@ -1,29 +1,48 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Upload } from "lucide-react";
+import { Upload, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { useStore } from "@/store";
+import { useShallow } from "zustand/shallow";
+
+interface FormValues {
+  caption: string;
+}
 
 const CreatePost = () => {
-  const form = useForm();
-  const [images, setImages] = useState<string[]>([]);
+  const form = useForm<FormValues>();
+  const [imagesPreview, setImagesPreview] = useState<string[]>([]);
+  const [images, setImages] = useState<File[]>([]);
+
+  const { createPost, postLoading } = useStore(
+    useShallow((store) => ({
+      createPost: store.createPost,
+      postLoading: store.postLoading,
+    }))
+  );
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const newImages = files.map((file) => URL.createObjectURL(file));
-    setImages((prev) => [...prev, ...newImages]);
+
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setImagesPreview((prev) => [...prev, ...newPreviews]);
+    setImages((prev) => [...prev, ...files]);
   };
 
   const removeImage = (index: number) => {
+    setImagesPreview((prev) => prev.filter((_, i) => i !== index));
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const { handleSubmit } = form;
+  const { handleSubmit, reset } = form;
 
-  const onSubmit = (data: any) => {
-    console.log("Post data:", data);
-    console.log("Uploaded images:", images);
+  const onSubmit = (data: FormValues) => {
+    createPost(data.caption, images, () => {
+      reset();
+      setImages([]);
+      setImagesPreview([]);
+    });
   };
 
   return (
@@ -38,6 +57,7 @@ const CreatePost = () => {
             label="Your Thoughts"
             placeholder="Share your thoughts..."
             className="min-h-28"
+            required
           />
         </div>
 
@@ -57,7 +77,7 @@ const CreatePost = () => {
                   <span className="font-semibold">Click to upload</span> or drag
                   and drop
                 </p>
-                <p className="text-xs text-gray-400">PNG, JPG or JPEG</p>
+                <p className="text-xs text-gray-400">PNG, JPG, JPEG</p>
               </div>
             </label>
             <input
@@ -72,9 +92,9 @@ const CreatePost = () => {
         </div>
 
         {/* Image Preview */}
-        {images.length > 0 && (
+        {imagesPreview.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
-            {images.map((src, index) => (
+            {imagesPreview.map((src, index) => (
               <div
                 key={index}
                 className="relative group rounded-lg overflow-hidden border"
@@ -97,7 +117,7 @@ const CreatePost = () => {
         )}
 
         <div className="flex justify-end">
-          <Button type="submit" className="px-6">
+          <Button type="submit" className="px-6" loading={postLoading}>
             Post
           </Button>
         </div>

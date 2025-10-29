@@ -98,7 +98,7 @@ const AppSidebar = () => {
               <div className="flex items-center gap-3">
                 <Avatar>
                   <AvatarImage src={user?.profilePicture} />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarFallback>{user?.name?.[0] || "U"}</AvatarFallback>
                 </Avatar>
                 <div>
                   <h5

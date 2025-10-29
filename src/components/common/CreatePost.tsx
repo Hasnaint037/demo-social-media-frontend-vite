@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -6,36 +6,39 @@ import { ImagePlus, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-
-interface ImagePreview {
-  file: File;
-  url: string;
-}
+import { useStore } from "@/store";
+import { useShallow } from "zustand/shallow";
 
 interface FormValues {
-  content: string;
+  caption: string;
 }
 
 const CreatePost: React.FC = () => {
   const form = useForm<FormValues>();
   const { handleSubmit, reset } = form;
   const [isExpanded, setIsExpanded] = useState(false);
-  const [images, setImages] = useState<ImagePreview[]>([]);
+  const [imagesPreview, setImagesPreview] = useState<string[]>([]);
+  const [images, setImages] = useState<File[]>([]);
 
-  const user = {
-    name: "Ali Raza",
-    email: "ali.raza@example.com",
-    bio: "",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+  const { user, createPost, postLoading } = useStore(
+    useShallow((store) => ({
+      user: store.user,
+      createPost: store.createPost,
+      postLoading: store.postLoading,
+    }))
+  );
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setImagesPreview((prev) => [...prev, ...newPreviews]);
+    setImages((prev) => [...prev, ...files]);
   };
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
-    const previews = files.map((file) => ({
-      file,
-      url: URL.createObjectURL(file),
-    }));
-    setImages((prev) => [...prev, ...previews]);
+  const removeImage = (index: number) => {
+    setImagesPreview((prev) => prev.filter((_, i) => i !== index));
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleCancel = () => {
@@ -45,25 +48,28 @@ const CreatePost: React.FC = () => {
   };
 
   const onSubmit = (data: FormValues) => {
-    console.log("Form Data:", data);
-    console.log("Images:", images);
-    handleCancel();
+    createPost(data.caption, images, () => {
+      reset();
+      setImages([]);
+      setImagesPreview([]);
+      handleCancel();
+    });
   };
 
   return (
     <div className="bg-white dark:bg-gray-900 p-4 rounded-2xl shadow mb-6">
       <div className="flex items-start gap-3">
         <Avatar>
-          <AvatarImage src={user.avatar} />
-          <AvatarFallback>{user.name?.[0] || "U"}</AvatarFallback>
+          <AvatarImage src={user?.profilePicture} />
+          <AvatarFallback>{user?.name?.[0] || "U"}</AvatarFallback>
         </Avatar>
 
         <div className="flex-1">
           {!isExpanded ? (
             <Input
               form={form}
-              registerName="content"
-              placeholder={`What's on your mind, ${user.name.split(" ")[0]}?`}
+              registerName="caption"
+              placeholder={`What's on your mind, ${user?.name.split(" ")[0]}?`}
               onFocus={() => setIsExpanded(true)}
               className="w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-full cursor-pointer outline-none"
             />
@@ -78,31 +84,27 @@ const CreatePost: React.FC = () => {
               >
                 <Textarea
                   form={form}
-                  registerName="content"
+                  registerName="caption"
                   required
                   placeholder="Write something..."
                   className="w-full resize-none bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 p-3 rounded-lg outline-none min-h-[100px]"
                   autoFocus
                 />
-                {images.length > 0 && (
+                {imagesPreview.length > 0 && (
                   <div className="flex flex-wrap gap-3 mt-3">
-                    {images.map((img, i) => (
+                    {imagesPreview.map((img, i) => (
                       <div
                         key={i}
                         className="relative w-24 h-24 rounded-lg overflow-hidden"
                       >
                         <img
-                          src={img.url}
+                          src={img}
                           alt={`preview-${i}`}
                           className="w-full h-full object-cover"
                         />
                         <button
                           type="button"
-                          onClick={() =>
-                            setImages((prev) =>
-                              prev.filter((_, idx) => idx !== i)
-                            )
-                          }
+                          onClick={() => removeImage(i)}
                           className="absolute top-1 right-1 bg-black/60 rounded-full p-1 text-white cursor-pointer"
                         >
                           <X size={14} />
@@ -140,6 +142,7 @@ const CreatePost: React.FC = () => {
                       type="submit"
                       onClick={handleSubmit(onSubmit)}
                       className="bg-blue-600 text-white rounded-full px-3 hover:bg-blue-700"
+                      loading={postLoading}
                     >
                       Post
                     </Button>
