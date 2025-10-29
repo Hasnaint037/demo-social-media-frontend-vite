@@ -18,10 +18,10 @@ const Signup = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { login, signup, loading } = useStore(
-    useShallow((state) => ({
-      login: state.login,
-      signup: state.signup,
-      loading: state.isLoading,
+    useShallow((store) => ({
+      login: store.login,
+      signup: store.signup,
+      loading: store.isLoading,
     }))
   );
 
