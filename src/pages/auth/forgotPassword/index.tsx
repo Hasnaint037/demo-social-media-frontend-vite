@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AUTH_PATHS } from "@/routes/paths/authPaths";
+import { useStore } from "@/store";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { useShallow } from "zustand/shallow";
 
 interface ForgotPasswordFormValues {
   email: string;
@@ -15,8 +17,17 @@ const ForgotPassword = () => {
     },
   });
 
+  const { forgotPassword, loading } = useStore(
+    useShallow((store) => ({
+      forgotPassword: store.forgotPassword,
+      loading: store.isLoading,
+    }))
+  );
+
+  const { handleSubmit } = form;
+
   const onSubmit = (data: ForgotPasswordFormValues) => {
-    console.log("Reset link will be sent to:", data.email);
+    forgotPassword(data.email);
   };
 
   return (
@@ -49,7 +60,12 @@ const ForgotPassword = () => {
             }}
           />
 
-          <Button type="submit" className="mt-2">
+          <Button
+            type="submit"
+            className="mt-2"
+            onClick={handleSubmit(onSubmit)}
+            loading={loading}
+          >
             Send Reset Link
           </Button>
         </form>

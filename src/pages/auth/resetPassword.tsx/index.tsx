@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AUTH_PATHS } from "@/routes/paths/authPaths";
+import { useStore } from "@/store";
 import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import { useShallow } from "zustand/shallow";
 
 interface ResetPasswordFormValues {
   newPassword: string;
@@ -8,6 +12,8 @@ interface ResetPasswordFormValues {
 }
 
 const ResetPassword = () => {
+  const navigate = useNavigate();
+  const { token } = useParams();
   const form = useForm<ResetPasswordFormValues>({
     defaultValues: {
       newPassword: "",
@@ -15,8 +21,17 @@ const ResetPassword = () => {
     },
   });
 
+  const { resetPassword } = useStore(
+    useShallow((store) => ({
+      resetPassword: store.resetPassword,
+    }))
+  );
+
   const onSubmit = (data: ResetPasswordFormValues) => {
-    console.log("Password reset data:", data);
+    if (!token) return;
+    resetPassword(data.newPassword, token, () => {
+      navigate(AUTH_PATHS.LOGIN);
+    });
   };
 
   return (
