@@ -111,6 +111,16 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.Toastify__toast--success {
+  background: none;
+  color: #366d4a !important;
+}
+
+.Toastify__toast--error {
+  background: none !important;
+  color: rgb(230, 95, 95) !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -1,7 +1,13 @@
-function App() {
-  return (
-    <div>App Component</div>
-  )
-}
+import { ToastContainer } from "react-toastify";
+import AppRoutes from "./routes";
 
-export default App
+const App = () => {
+  return (
+    <div>
+      <ToastContainer position="top-right" autoClose={3000} />
+      <AppRoutes />
+    </div>
+  );
+};
+
+export default App;
