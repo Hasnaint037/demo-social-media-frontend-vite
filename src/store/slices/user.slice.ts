@@ -1,5 +1,5 @@
 import type { StateCreator } from "zustand";
-import { axiosInstance } from "@/api/axiosInstance";
+import { axiosInstance } from "@/api";
 import { tryCatchWrapper } from "@/assets/js/tryCatchWrapper";
 import { toast } from "react-toastify";
 

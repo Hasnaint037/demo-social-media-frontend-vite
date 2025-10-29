@@ -115,7 +115,7 @@ const Signup = () => {
             placeholder="Enter your password"
           />
           {!isSignup && (
-            <span className="text-sm mt-1 text-blue-500 text-right w-100 absolute">
+            <span className="text-sm mt-1 text-blue-500 text-right w-100 absolute hover:underline font-medium">
               <Link to={AUTH_PATHS.FORGOT_PASSWORD}>Forgot Password?</Link>
             </span>
           )}
