@@ -35,10 +35,7 @@ const Signup = () => {
       : { email: "", password: "" },
   });
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = form;
+  const { handleSubmit } = form;
 
   const onSucces = () => {
     navigate(PROTECTED_PATHS.HOME);
