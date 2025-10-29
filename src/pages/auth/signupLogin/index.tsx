@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AUTH_PATHS } from "@/routes/paths/authPaths";
 import { useStore } from "@/store";
 import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
@@ -99,20 +99,27 @@ const Signup = () => {
           placeholder="Enter your email"
         />
 
-        <Input
-          form={form}
-          label="Password"
-          type="password"
-          registerName="password"
-          required
-          registerOptions={{
-            minLength: {
-              value: 6,
-              message: "Password must be at least 6 characters",
-            },
-          }}
-          placeholder="Enter your password"
-        />
+        <div className="mb-8">
+          <Input
+            form={form}
+            label="Password"
+            type="password"
+            registerName="password"
+            required
+            registerOptions={{
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+            }}
+            placeholder="Enter your password"
+          />
+          {!isSignup && (
+            <span className="text-sm mt-1 text-blue-500 text-right w-100 absolute">
+              <Link to={AUTH_PATHS.FORGOT_PASSWORD}>Forgot Password?</Link>
+            </span>
+          )}
+        </div>
 
         <Button
           type="submit"

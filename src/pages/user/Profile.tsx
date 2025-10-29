@@ -153,7 +153,7 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
             <Button
               onClick={handleSubmit(onSubmit)}
               loading={loading}
-              disabled={!isDirty && !image}
+              disabled={(!isDirty && !image) || loading}
             >
               Update Profile
             </Button>
