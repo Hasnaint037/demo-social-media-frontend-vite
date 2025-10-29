@@ -2,17 +2,22 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AUTH_PATHS } from "@/routes/paths/authPaths";
+import { useStore } from "@/store";
+import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
 
 interface SignupFormValues {
-  fullName: string;
+  fullName?: string;
   email: string;
   password: string;
 }
 
 const Signup = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const loading = useStore((state) => state.isLoading);
+  const login = useStore((state) => state.login);
   const [isSignup, setIsSignup] = useState<boolean>(
     location.pathname === AUTH_PATHS.SIGNUP ? true : false
   );
@@ -29,7 +34,16 @@ const Signup = () => {
   } = form;
 
   const onSubmit = (data: SignupFormValues) => {
-    console.log("Signup Data:", data);
+    const payload = {
+      name: data.fullName || null,
+      email: data.email,
+      password: data.password,
+    };
+    if (!data.fullName) {
+      login(data.email, payload.password, () => {
+        navigate(PROTECTED_PATHS.HOME);
+      });
+    }
   };
 
   return (
@@ -93,7 +107,7 @@ const Signup = () => {
           type="submit"
           className="w-full mt-2"
           variant="blue"
-          loading={isSubmitting}
+          loading={loading}
         >
           {isSignup ? "Signup" : "Login"}
         </Button>

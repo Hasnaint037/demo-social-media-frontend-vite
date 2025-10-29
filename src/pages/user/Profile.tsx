@@ -36,10 +36,7 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
       onClose={() => setOpen(false)}
       showCloseIcon={isViewMode}
     >
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-6 items-center sm:items-stretch"
-      >
+      <form className="flex flex-col gap-6 items-center sm:items-stretch">
         <div className="flex flex-col items-center gap-3">
           <Avatar className="w-20 h-20">
             <AvatarImage src={preview || "/placeholder-avatar.png"} />
@@ -111,7 +108,7 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
             >
               Cancel
             </Button>
-            <Button type="submit">Save Changes</Button>
+            <Button onClick={handleSubmit(onSubmit)}>Save Changes</Button>
           </div>
         )}
       </form>
