@@ -17,25 +17,30 @@ interface ProfileProps {
 const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
   const form = useForm();
   const { setValue } = form;
-  const { user } = useStore(
+  const { user, updateProfile, loading } = useStore(
     useShallow((store) => ({
       user: store.user,
+      updateProfile: store.updateProfile,
+      loading: store.profileLoading,
     }))
   );
   const [preview, setPreview] = useState<string | null>(null);
+  const [image, setImage] = useState<File>();
   const { handleSubmit } = form;
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setImage(file);
       const imageUrl = URL.createObjectURL(file);
       setPreview(imageUrl);
     }
   };
 
   const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
-    setOpen(false);
+    updateProfile(data.name, data.email, data.bio, image, () => {
+      setOpen(false);
+    });
   };
 
   useEffect(() => {
@@ -124,7 +129,9 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
             >
               Cancel
             </Button>
-            <Button onClick={handleSubmit(onSubmit)}>Save Changes</Button>
+            <Button onClick={handleSubmit(onSubmit)} loading={loading}>
+              Save Changes
+            </Button>
           </div>
         )}
       </form>

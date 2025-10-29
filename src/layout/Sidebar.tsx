@@ -97,7 +97,7 @@ const AppSidebar = () => {
             <SidebarMenuItem className="flex items-center gap-2 rounded-md mb-2 cursor-pointer transition-colors duration-300 py-3 border border-blue-100 hover:bg-blue-100 hover:text-blue-500">
               <div className="flex items-center gap-3">
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src={user?.profilePicture} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div>
