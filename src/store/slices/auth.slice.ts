@@ -1,7 +1,6 @@
 import type { StateCreator } from "zustand";
 import { axiosInstance } from "@/api/axiosInstance";
 import { tryCatchWrapper } from "@/assets/js/tryCatchWrapper";
-import { toast } from "react-toastify";
 
 export interface User {
   _id: string;
@@ -25,7 +24,7 @@ export interface AuthSlice {
     password: string,
     onSuccess?: () => void
   ) => Promise<void>;
-  logout: () => void;
+  logout: (onSuccess?: () => void) => Promise<void>;
 }
 
 export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
@@ -73,8 +72,20 @@ export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
     });
   },
 
-  logout: () => {
-    set({ user: null });
-    toast.success("Logged out successfully 👋");
+  logout: async (onSuccess) => {
+    set({ isLoading: true });
+
+    await tryCatchWrapper(
+      async () => {
+        const res = await axiosInstance.post("/auth/logout");
+        return res.data;
+      },
+      () => {
+        set({ user: null, isLoading: false });
+        onSuccess?.();
+      }
+    ).finally(() => {
+      set({ isLoading: false });
+    });
   },
 });

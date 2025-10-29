@@ -1,5 +1,5 @@
 import { Home, Search, PlusSquare, FileText } from "lucide-react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Sidebar, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
@@ -9,6 +9,9 @@ import { useState } from "react";
 import Profile from "@/pages/user/Profile";
 import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
 import { showConfirmAlert } from "@/assets/alerts/sweetalert";
+import { useStore } from "@/store";
+import { AUTH_PATHS } from "@/routes/paths/authPaths";
+import { useShallow } from "zustand/shallow";
 
 const items = [
   { title: "Home", url: "/", icon: Home },
@@ -28,6 +31,12 @@ const items = [
 
 const AppSidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useStore(
+    useShallow((store) => ({
+      logout: store.logout,
+    }))
+  );
   const [openPopover, setOpenPopover] = useState(false);
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [isViewMode, setIsViewMode] = useState(false);
@@ -39,6 +48,9 @@ const AppSidebar = () => {
       confirmButtonText: "Logout",
     });
     if (confirmed) {
+      logout(() => {
+        navigate(AUTH_PATHS.LOGIN);
+      });
       console.log("logout");
     }
   };
