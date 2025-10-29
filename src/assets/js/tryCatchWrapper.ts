@@ -11,6 +11,7 @@ export async function tryCatchWrapper<T>(
     return data;
   } catch (error: any) {
     const message = handleError(error);
+    debugger;
     toast.error(message || "Something went wrong");
     throw error;
   }

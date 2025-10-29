@@ -37,7 +37,7 @@ export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
 
     await tryCatchWrapper(
       async () => {
-        const res = await axiosInstance.post("/auth/signup", {
+        const res = await axiosInstance.post("/auth/register", {
           name,
           email,
           password,
@@ -45,7 +45,7 @@ export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
         return res.data;
       },
       (data: any) => {
-        set({ user: data.user, isLoading: false });
+        set({ user: data.data, isLoading: false });
         onSuccess?.();
       }
     ).finally(() => {

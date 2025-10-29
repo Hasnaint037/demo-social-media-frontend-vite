@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AUTH_PATHS } from "@/routes/paths/authPaths";
 import { useStore } from "@/store";
 import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
+import { useShallow } from "zustand/shallow";
 
 interface SignupFormValues {
   fullName?: string;
@@ -16,8 +17,14 @@ interface SignupFormValues {
 const Signup = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const loading = useStore((state) => state.isLoading);
-  const login = useStore((state) => state.login);
+  const { login, signup, loading } = useStore(
+    useShallow((state) => ({
+      login: state.login,
+      signup: state.signup,
+      loading: state.isLoading,
+    }))
+  );
+
   const [isSignup, setIsSignup] = useState<boolean>(
     location.pathname === AUTH_PATHS.SIGNUP ? true : false
   );
@@ -33,6 +40,10 @@ const Signup = () => {
     formState: { isSubmitting },
   } = form;
 
+  const onSucces = () => {
+    navigate(PROTECTED_PATHS.HOME);
+  };
+
   const onSubmit = (data: SignupFormValues) => {
     const payload = {
       name: data.fullName || null,
@@ -40,9 +51,9 @@ const Signup = () => {
       password: data.password,
     };
     if (!data.fullName) {
-      login(data.email, payload.password, () => {
-        navigate(PROTECTED_PATHS.HOME);
-      });
+      login(data.email, payload.password, onSucces);
+    } else {
+      signup(data.fullName, data.email, data.password, onSucces);
     }
   };
 
