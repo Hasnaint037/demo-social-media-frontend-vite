@@ -32,9 +32,10 @@ const items = [
 const AppSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useStore(
+  const { logout, user } = useStore(
     useShallow((store) => ({
       logout: store.logout,
+      user: store.user,
     }))
   );
   const [openPopover, setOpenPopover] = useState(false);
@@ -100,8 +101,18 @@ const AppSidebar = () => {
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div>
-                  <h5 className="font-medium text-sm">Hasnain Tariq</h5>
-                  <span className="text-sm">hasnain@gmail.com</span>
+                  <h5
+                    title={user?.name}
+                    className="font-medium text-sm max-w-[185px] truncate"
+                  >
+                    {user?.name}
+                  </h5>
+                  <span
+                    title={user?.email}
+                    className="block text-sm truncate max-w-[185px]"
+                  >
+                    {user?.email}
+                  </span>
                 </div>
               </div>
             </SidebarMenuItem>

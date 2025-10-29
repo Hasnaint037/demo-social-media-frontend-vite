@@ -2,9 +2,11 @@ import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
+import { useStore } from "@/store";
+import { useShallow } from "zustand/shallow";
 
 interface ProfileProps {
   open: boolean;
@@ -14,6 +16,12 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
   const form = useForm();
+  const { setValue } = form;
+  const { user } = useStore(
+    useShallow((store) => ({
+      user: store.user,
+    }))
+  );
   const [preview, setPreview] = useState<string | null>(null);
   const { handleSubmit } = form;
 
@@ -30,6 +38,14 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    if (user) {
+      setValue("name", user.name);
+      setValue("email", user.email);
+      setValue("bio", user.bio);
+    }
+  }, []);
+
   return (
     <Dialog
       open={open}
@@ -39,7 +55,7 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
       <form className="flex flex-col gap-6 items-center sm:items-stretch">
         <div className="flex flex-col items-center gap-3">
           <Avatar className="w-20 h-20">
-            <AvatarImage src={preview || "/placeholder-avatar.png"} />
+            <AvatarImage src={preview || user?.profilePicture} />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
 
