@@ -11,6 +11,9 @@ export async function tryCatchWrapper<T>(
     return data;
   } catch (error: any) {
     const message = handleError(error);
+    if (Array.isArray(message)) {
+      message.forEach((msg) => toast.error(msg));
+    }
     debugger;
     toast.error(message || "Something went wrong");
     throw error;

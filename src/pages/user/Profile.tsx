@@ -115,6 +115,12 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
             form={form}
             registerName="bio"
             id="bio"
+            registerOptions={{
+              minLength: {
+                value: 12,
+                message: "Bio must be at least 6 characters long",
+              },
+            }}
             placeholder="Write something about yourself..."
             disabled={isViewMode}
           />
