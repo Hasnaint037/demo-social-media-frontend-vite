@@ -15,8 +15,6 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
-  const form = useForm();
-  const { setValue } = form;
   const { user, updateProfile, loading } = useStore(
     useShallow((store) => ({
       user: store.user,
@@ -24,9 +22,23 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
       loading: store.profileLoading,
     }))
   );
+
   const [preview, setPreview] = useState<string | null>(null);
   const [image, setImage] = useState<File>();
-  const { handleSubmit } = form;
+
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      bio: "",
+    },
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    formState: { isDirty },
+  } = form;
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -45,11 +57,14 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
 
   useEffect(() => {
     if (user) {
-      setValue("name", user.name);
-      setValue("email", user.email);
-      setValue("bio", user.bio);
+      reset({
+        name: user.name || "",
+        email: user.email || "",
+        bio: user.bio || "",
+      });
+      setPreview(user.profilePicture || null);
     }
-  }, []);
+  }, [user, reset]);
 
   return (
     <Dialog
@@ -135,8 +150,12 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
             >
               Cancel
             </Button>
-            <Button onClick={handleSubmit(onSubmit)} loading={loading}>
-              Save Changes
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              loading={loading}
+              disabled={!isDirty && !image}
+            >
+              Update Profile
             </Button>
           </div>
         )}
