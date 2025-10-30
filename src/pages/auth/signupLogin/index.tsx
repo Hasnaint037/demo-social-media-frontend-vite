@@ -35,10 +35,7 @@ const Signup = () => {
       : { email: "", password: "" },
   });
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = form;
+  const { handleSubmit } = form;
 
   const onSucces = () => {
     navigate(PROTECTED_PATHS.HOME);
@@ -87,7 +84,7 @@ const Signup = () => {
         <Input
           form={form}
           label="Email"
-          type="emai  l"
+          type="email"
           registerName="email"
           required
           registerOptions={{

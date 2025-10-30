@@ -33,5 +33,9 @@ export const ROUTE_CONFIG = {
       path: PROTECTED_PATHS.USERS.PROFILE,
       component: ROUTE_COMPONENTS.USER_DEATIL,
     },
+    {
+      path: PROTECTED_PATHS.USERS.MY_FEED,
+      component: ROUTE_COMPONENTS.MY_FEED,
+    },
   ],
 };

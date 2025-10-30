@@ -1,59 +1,80 @@
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import PostCard from "@/components/common/PostCard";
+import { useStore } from "@/store";
+import { useShallow } from "zustand/shallow";
+import PostCard from "@/pages/post/components/PostCard";
 
 const UserDetail = () => {
-  const { userId } = useParams();
   const [isFollowing, setIsFollowing] = useState(false);
+  const [page, setPage] = useState(1);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const user = {
-    id: userId,
-    name: "Ali Raza",
-    email: "ali.raza@example.com",
-    bio: "",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-  };
+  const location = useLocation();
+  const { userId } = useParams();
+  const user = location.state?.user; // passed from SearchUser
 
-  const posts = [
-    {
-      _id: "1",
-      author: { name: user.name, avatar: user.avatar },
-      content: "Excited to share my new project with you all! 🚀",
-      images: [
-        "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
-        "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
-      ],
-      createdAt: new Date().toISOString(),
-      likes: 25,
-      comments: 8,
+  const { getPosts, loading, posts, pagination, reset } = useStore(
+    useShallow((store) => ({
+      getPosts: store.getPosts,
+      loading: store.postLoading,
+      posts: store.posts,
+      pagination: store.pagination,
+      reset: store.reset,
+    }))
+  );
+
+  // ✅ Fetch user's posts on mount
+  useEffect(() => {
+    if (!userId && !user?._id) return;
+    reset();
+    getPosts({ page: 1, limit: 10, userId: userId || user._id });
+  }, [userId]);
+
+  // ✅ Load more when scrolling
+  useEffect(() => {
+    if (page > 1) {
+      getPosts({ page, limit: 10, userId: userId || user._id }, true);
+    }
+  }, [page]);
+
+  const lastPostRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (loading) return;
+      if (observerRef.current) observerRef.current.disconnect();
+
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && pagination?.hasNextPage) {
+          setPage((prev) => prev + 1);
+        }
+      });
+
+      if (node) observerRef.current.observe(node);
     },
-    {
-      _id: "2",
-      author: { name: user.name, avatar: user.avatar },
-      content: "Nothing beats a cup of coffee and clean code ☕",
-      images: ["https://images.unsplash.com/photo-1633356122544-f134324a6cee"],
-      createdAt: new Date().toISOString(),
-      likes: 12,
-      comments: 3,
-    },
-  ];
+    [loading, pagination]
+  );
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-10">
       <div className="flex items-center gap-6 mb-8 border-b pb-6">
-        <Avatar className="w-20 h-20">
-          <AvatarImage src={user.avatar} alt={user.name} />
-          <AvatarFallback>{user.name[0]}</AvatarFallback>
+        <Avatar className="w-20 h-20 rounded-full overflow-hidden">
+          <AvatarImage
+            src={user?.profilePicture}
+            alt={user?.name}
+            className="w-full h-full object-cover rounded-full"
+          />
+          <AvatarFallback className="rounded-full bg-gray-200 text-gray-600">
+            {user?.name?.[0] || "U"}
+          </AvatarFallback>
         </Avatar>
 
         <div className="flex-1">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {user.name}
+            {user?.name}
           </h2>
-          <p className="text-gray-500">{user.email}</p>
-          {user.bio && (
+          <p className="text-gray-500">{user?.email}</p>
+          {user?.bio && (
             <p className="mt-2 text-gray-700 dark:text-gray-300 text-sm">
               {user.bio}
             </p>
@@ -70,10 +91,32 @@ const UserDetail = () => {
 
       <div>
         <h3 className="text-xl font-semibold mb-4">Posts</h3>
+
         {posts.length > 0 ? (
-          posts.map((post) => <PostCard key={post._id} post={post} />)
-        ) : (
+          posts.map((post, index) => {
+            if (index === posts.length - 1) {
+              return (
+                <div ref={lastPostRef} key={post._id}>
+                  <PostCard post={post} canShare={true} />
+                </div>
+              );
+            }
+            return <PostCard key={post._id} post={post} canShare={true} />;
+          })
+        ) : !loading ? (
           <p className="text-gray-500 text-center">No posts yet.</p>
+        ) : null}
+
+        {loading && (
+          <p className="text-center py-4 text-gray-500 dark:text-gray-400">
+            Loading posts...
+          </p>
+        )}
+
+        {!pagination?.hasNextPage && !loading && posts.length > 0 && (
+          <p className="text-center py-4 text-gray-500 dark:text-gray-400">
+            No More Posts
+          </p>
         )}
       </div>
     </div>

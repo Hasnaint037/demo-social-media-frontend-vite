@@ -112,12 +112,12 @@
 }
 
 .Toastify__toast--success {
-  background: none;
+  background: white !important;
   color: #366d4a !important;
 }
 
 .Toastify__toast--error {
-  background: none !important;
+  background: white !important;
   color: rgb(230, 95, 95) !important;
 }
 
