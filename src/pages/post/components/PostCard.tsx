@@ -73,12 +73,8 @@ const PostCard: React.FC<PostCardProps> = ({
             })
           }
         >
-          <AvatarImage
-            src={user?.profilePicture}
-            alt={user?.name}
-            className="w-full h-full object-cover rounded-full"
-          />
-          <AvatarFallback>{user?.name?.[0] || "U"}</AvatarFallback>
+          <AvatarImage src={post?.author.profilePicture} />
+          <AvatarFallback>{post.author?.name?.[0] || "U"}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <p className="font-semibold text-gray-900 dark:text-white">

@@ -30,7 +30,6 @@ const CreatePost: React.FC = () => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-
     const newPreviews = files.map((file) => URL.createObjectURL(file));
     setImagesPreview((prev) => [...prev, ...newPreviews]);
     setImages((prev) => [...prev, ...files]);
