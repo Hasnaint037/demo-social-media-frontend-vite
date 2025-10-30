@@ -7,11 +7,13 @@ import {
 
 interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "form"> {
-  form: UseFormReturn<any>;
+  form?: UseFormReturn<any>;
   registerName: string;
   registerOptions?: RegisterOptions;
   label?: string;
   required?: boolean;
+  value?: string | number;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -22,37 +24,52 @@ const Input: React.FC<InputProps> = ({
   className,
   label,
   required = true,
+  value: propValue,
+  onChange: propOnChange,
   ...props
 }) => {
-  const {
-    control,
-    formState: { errors },
-  } = form;
+  let inputValue = propValue ?? "";
+  let handleChange = propOnChange;
+  let handleBlur: ((e: React.FocusEvent<HTMLInputElement>) => void) | undefined;
+  let inputRef: React.Ref<HTMLInputElement> | undefined;
+  let error: any = null;
 
-  const mergedRules: RegisterOptions = {
-    ...registerOptions,
-    ...(required && !registerOptions?.required
-      ? { required: `${label || registerName} is required` }
-      : {}),
-  };
+  if (form) {
+    const {
+      control,
+      formState: { errors },
+    } = form;
 
-  const {
-    field: { onChange, onBlur, value, ref },
-  } = useController({
-    name: registerName,
-    control,
-    rules: mergedRules,
-    defaultValue: "",
-  });
+    const mergedRules: RegisterOptions = {
+      ...registerOptions,
+      ...(required && !registerOptions?.required
+        ? { required: `${label || registerName} is required` }
+        : {}),
+    };
 
-  const safeValue =
-    value === null || value === undefined
-      ? ""
-      : typeof value === "string" || typeof value === "number"
-      ? value
-      : "";
+    const {
+      field: { onChange, onBlur, value, ref },
+    } = useController({
+      name: registerName,
+      control,
+      rules: mergedRules,
+      defaultValue: "",
+    });
 
-  const error = errors?.[registerName];
+    inputValue = value ?? "";
+    handleChange = onChange;
+    handleBlur = onBlur;
+    inputRef = ref;
+    error = errors?.[registerName];
+  } else {
+    const [internalValue, setInternalValue] = React.useState("");
+
+    inputValue = propValue ?? internalValue;
+    handleChange =
+      propOnChange ??
+      ((e: React.ChangeEvent<HTMLInputElement>) =>
+        setInternalValue(e.target.value));
+  }
 
   return (
     <div className="flex flex-col gap-1">
@@ -65,10 +82,10 @@ const Input: React.FC<InputProps> = ({
 
       <input
         type={type}
-        ref={ref}
-        value={safeValue}
-        onChange={onChange}
-        onBlur={onBlur}
+        ref={inputRef}
+        value={inputValue}
+        onChange={handleChange}
+        onBlur={handleBlur}
         data-slot="input"
         className={`px-3 py-2 border rounded-md w-full 
           focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 
