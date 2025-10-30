@@ -76,7 +76,7 @@ const MyPosts = () => {
 
       {!pagination?.hasNextPage && !loading && posts.length > 0 && (
         <p className="text-center py-4 text-gray-500 dark:text-gray-400">
-          You’ve reached the end 🎉
+          No More Posts
         </p>
       )}
     </div>
