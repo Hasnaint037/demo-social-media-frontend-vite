@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import FeedPage from "./user/Feed";
 const Signup = lazy(() => import("@/pages/auth/signupLogin"));
 const Home = lazy(() => import("@/pages/home"));
 const ResetPassword = lazy(() => import("@/pages/auth/resetPassword.tsx"));
@@ -17,4 +18,5 @@ export const ROUTE_COMPONENTS = {
   CREATE_POST: CreatePost,
   MY_POSTS: MyPosts,
   USER_DEATIL: UserDetail,
+  MY_FEED: FeedPage,
 };

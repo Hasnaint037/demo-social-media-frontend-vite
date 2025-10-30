@@ -1,4 +1,4 @@
-import { Home, Search, PlusSquare, FileText } from "lucide-react";
+import { Home, Search, PlusSquare, FileText, List } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Sidebar, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,6 +26,11 @@ const items = [
     title: "My Posts",
     url: PROTECTED_PATHS.POSTS.MY_POSTS,
     icon: FileText,
+  },
+  {
+    title: "My Feed",
+    url: PROTECTED_PATHS.USERS.MY_FEED,
+    icon: List,
   },
 ];
 
