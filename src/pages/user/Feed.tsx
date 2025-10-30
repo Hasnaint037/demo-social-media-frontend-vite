@@ -21,7 +21,6 @@ const FeedPage = () => {
     }))
   );
 
-  // Fetch first page when filter changes
   useEffect(() => {
     reset();
     setPage(1);
@@ -33,7 +32,6 @@ const FeedPage = () => {
     getPosts(query);
   }, [filter]);
 
-  // Fetch next page on page change
   useEffect(() => {
     if (page === 1) return;
     const query: any = { page, limit: 10 };
@@ -41,10 +39,9 @@ const FeedPage = () => {
     if (filter === "mostLiked") query.isMostLikedPosts = "true";
     if (filter === "mostShared") query.isMostSharedPosts = "true";
 
-    getPosts(query, true); // append posts
+    getPosts(query, true);
   }, [page]);
 
-  // Intersection observer for infinite scroll
   const lastPostRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (loading) return;
