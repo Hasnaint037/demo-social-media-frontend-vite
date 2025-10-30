@@ -130,15 +130,9 @@ export const createPostSlice: StateCreator<PostSlice> = (set) => ({
       return { posts: updatedPosts };
     });
 
-    const controller = new AbortController();
-
     await tryCatchWrapper(
       async () => {
-        await axiosInstance.post(
-          `/post/like-post/${postId}`,
-          {},
-          { signal: controller.signal }
-        );
+        await axiosInstance.post(`/post/like-post/${postId}`, {});
       },
       () => {},
       () => {
