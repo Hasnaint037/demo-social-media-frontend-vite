@@ -3,10 +3,10 @@ import { Share2, Trash2, Heart } from "lucide-react";
 import { showConfirmAlert } from "@/assets/alerts/sweetalert";
 import { useStore } from "@/store";
 import type { Post } from "@/store/slices/post.slice";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface PostCardProps {
   post: Post;
@@ -78,9 +78,7 @@ const PostCard: React.FC<PostCardProps> = ({
             alt={user?.name}
             className="w-full h-full object-cover rounded-full"
           />
-          <AvatarFallback className="rounded-full bg-gray-200 text-gray-600">
-            {user?.name?.[0] || "U"}
-          </AvatarFallback>
+          <AvatarFallback>{user?.name?.[0] || "U"}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <p className="font-semibold text-gray-900 dark:text-white">
