@@ -45,6 +45,8 @@ export interface PostSlice {
     append?: boolean,
     onSuccess?: () => void
   ) => Promise<void>;
+
+  toggleLike: (postId: string, userId: string) => Promise<void>;
 }
 
 export const createPostSlice: StateCreator<PostSlice> = (set) => ({
@@ -108,5 +110,55 @@ export const createPostSlice: StateCreator<PostSlice> = (set) => ({
     ).finally(() => {
       set({ postLoading: false });
     });
+  },
+
+  toggleLike: async (postId, userId) => {
+    set((state) => {
+      const updatedPosts = state.posts.map((post) => {
+        if (post._id === postId) {
+          const isLiked = post.likesData.includes(userId);
+          return {
+            ...post,
+            likesCount: isLiked ? post.likesCount - 1 : post.likesCount + 1,
+            likesData: isLiked
+              ? post.likesData.filter((id) => id !== userId)
+              : [...post.likesData, userId],
+          };
+        }
+        return post;
+      });
+      return { posts: updatedPosts };
+    });
+
+    const controller = new AbortController();
+
+    await tryCatchWrapper(
+      async () => {
+        await axiosInstance.post(
+          `/post/like-post/${postId}`,
+          {},
+          { signal: controller.signal }
+        );
+      },
+      () => {},
+      () => {
+        set((state) => {
+          const updatedPosts = state.posts.map((post) => {
+            if (post._id === postId) {
+              const isLiked = post.likesData.includes(userId);
+              return {
+                ...post,
+                likesCount: isLiked ? post.likesCount - 1 : post.likesCount + 1,
+                likesData: isLiked
+                  ? post.likesData.filter((id) => id !== userId)
+                  : [...post.likesData, userId],
+              };
+            }
+            return post;
+          });
+          return { posts: updatedPosts };
+        });
+      }
+    );
   },
 });

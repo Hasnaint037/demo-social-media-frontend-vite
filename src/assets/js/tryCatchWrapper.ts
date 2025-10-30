@@ -3,7 +3,8 @@ import { handleError } from "./errorHandler";
 
 export async function tryCatchWrapper<T>(
   asyncFn: () => Promise<T>,
-  onSuccess?: (data: T) => void
+  onSuccess?: (data: T) => void,
+  onError?: () => void
 ) {
   try {
     const data = await asyncFn();
@@ -14,6 +15,7 @@ export async function tryCatchWrapper<T>(
     if (Array.isArray(message)) {
       message.forEach((msg) => toast.error(msg));
     }
+    onError?.();
     toast.error(message || "Something went wrong");
     throw error;
   }

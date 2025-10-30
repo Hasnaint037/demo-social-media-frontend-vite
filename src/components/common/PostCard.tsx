@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { Share2, Trash2 } from "lucide-react";
+import { Share2, Trash2, Heart } from "lucide-react";
 import { showConfirmAlert } from "@/assets/alerts/sweetalert";
+import { useStore } from "@/store";
 import type { Post } from "@/store/slices/post.slice";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+
 interface PostCardProps {
   post: Post;
   canShare?: boolean;
@@ -15,8 +18,20 @@ const PostCard: React.FC<PostCardProps> = ({
   canDelete = false,
   onDelete,
 }) => {
-  const [showAllImages, setShowAllImages] = useState(false);
-  const images = post.media || [];
+  const toggleLike = useStore((state) => state.toggleLike);
+  const user = useStore((state) => state.user);
+
+  const [processingLike, setProcessingLike] = useState(false);
+
+  if (!user) return;
+  const likedByCurrentUser = post.likesData.includes(user._id);
+
+  const handleLike = async () => {
+    if (processingLike) return;
+    setProcessingLike(true);
+    toggleLike(post._id, user._id);
+    setProcessingLike(false);
+  };
 
   const handleDeletePost = async (id: string) => {
     const confirmed = await showConfirmAlert({
@@ -25,54 +40,6 @@ const PostCard: React.FC<PostCardProps> = ({
       confirmButtonText: "Delete",
     });
     if (confirmed) onDelete?.(id);
-  };
-
-  const renderImages = (imgs: string[]) => {
-    if (imgs.length === 1) {
-      return (
-        <img
-          src={imgs[0]}
-          alt="post"
-          className="w-full h-64 object-cover rounded-xl"
-        />
-      );
-    }
-
-    if (imgs.length === 2) {
-      return (
-        <div className="grid grid-cols-2 gap-2 mb-3">
-          {imgs.map((img, i) => (
-            <img
-              key={i}
-              src={img}
-              alt={`post-${i}`}
-              className="w-full h-56 object-cover rounded-xl"
-            />
-          ))}
-        </div>
-      );
-    }
-
-    return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 rounded-xl overflow-hidden mb-3">
-        {(showAllImages ? imgs : imgs.slice(0, 2)).map((img, i) => (
-          <img
-            key={i}
-            src={img}
-            alt={`post-${i}`}
-            className="w-full h-40 object-cover rounded-xl"
-          />
-        ))}
-        {imgs.length > 4 && !showAllImages && (
-          <button
-            onClick={() => setShowAllImages(true)}
-            className="bg-black bg-opacity-50 text-white text-sm rounded-lg p-2"
-          >
-            +{imgs.length - 2} more
-          </button>
-        )}
-      </div>
-    );
   };
 
   return (
@@ -88,12 +55,17 @@ const PostCard: React.FC<PostCardProps> = ({
 
       {/* Author Info */}
       <div className="flex items-center gap-3 mb-3">
-        <img
-          src={post.author?.profilePicture}
-          alt={post.author?.name}
-          className="w-10 h-10 rounded-full object-cover"
-        />
-        <div>
+        <Avatar className="w-10 h-10 rounded-full overflow-hidden">
+          <AvatarImage
+            src={user?.profilePicture}
+            alt={user?.name}
+            className="w-full h-full object-cover rounded-full"
+          />
+          <AvatarFallback className="rounded-full bg-gray-200 text-gray-600">
+            {user?.name?.[0] || "U"}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex-1">
           <p className="font-semibold text-gray-900 dark:text-white">
             {post.author?.name}
           </p>
@@ -103,36 +75,28 @@ const PostCard: React.FC<PostCardProps> = ({
         </div>
       </div>
 
-      {/* Post Content */}
       {post.content && (
         <p className="text-gray-800 dark:text-gray-200 mb-3">{post.content}</p>
       )}
 
-      {images.length > 0 && renderImages(images)}
+      <div className="flex justify-between items-center mt-4 text-gray-600 dark:text-gray-400">
+        <button
+          onClick={handleLike}
+          disabled={processingLike}
+          className={`flex items-center gap-1 transition-colors cursor-pointer ${
+            likedByCurrentUser ? "text-blue-500" : "hover:text-blue-400"
+          }`}
+        >
+          <Heart
+            size={18}
+            fill={likedByCurrentUser ? "blue" : "none"}
+            className={`transition-transform ${
+              processingLike ? "opacity-50" : ""
+            }`}
+          />
+          <span className="text-sm">{post.likesCount}</span>
+        </button>
 
-      {post.originalPost && (
-        <div className="border border-gray-300 dark:border-gray-700 rounded-xl p-3 mt-2">
-          <div className="flex items-center gap-2 mb-2">
-            <img
-              src={post.originalPost.author.profilePicture}
-              alt={post.originalPost.author.name}
-              className="w-8 h-8 rounded-full object-cover"
-            />
-            <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-              {post.originalPost.author.name}
-            </p>
-          </div>
-          <p className="text-gray-700 dark:text-gray-300 text-sm mb-2">
-            {post.originalPost.content}
-          </p>
-          {post.originalPost.media?.length
-            ? renderImages(post.originalPost.media)
-            : null}
-        </div>
-      )}
-
-      {/* Actions */}
-      <div className="flex justify-end items-center mt-4 text-gray-600 dark:text-gray-400">
         {canShare && (
           <button className="flex items-center gap-1 hover:text-blue-500 cursor-pointer">
             <Share2 size={18} /> Share
