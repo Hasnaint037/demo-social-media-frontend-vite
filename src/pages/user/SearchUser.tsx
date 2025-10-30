@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,61 +7,35 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
+import { useStore } from "@/store";
+import { useShallow } from "zustand/shallow";
 
 const SearchUser = () => {
   const form = useForm();
+  const { watch } = form;
   const navigate = useNavigate();
-  const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
-  const [searchText, setSearchText] = useState("");
 
-  const users = [
-    {
-      id: 1,
-      name: "Ayesha Khan",
-      bio: "Frontend Developer | React Enthusiast 🚀",
-      avatar: "https://randomuser.me/api/portraits/women/68.jpg",
-    },
-    {
-      id: 2,
-      name: "Ali Raza",
-      bio: "MERN Stack Developer | Open Source Lover 💻",
-      avatar: "https://randomuser.me/api/portraits/men/12.jpg",
-    },
-    {
-      id: 3,
-      name: "Zara Sheikh",
-      bio: "UI/UX Designer | Minimalism is key 🎨",
-      avatar: "https://randomuser.me/api/portraits/women/47.jpg",
-    },
-    {
-      id: 4,
-      name: "Hamza Ahmed",
-      bio: "Full Stack Engineer | Coffee & Code ☕",
-      avatar: "https://randomuser.me/api/portraits/men/34.jpg",
-    },
-  ];
+  const { searchUser, users, loading } = useStore(
+    useShallow((store) => ({
+      searchUser: store.searchUser,
+      users: store.users || [],
+      loading: store.profileLoading,
+    }))
+  );
 
-  // Watch the input field from react-hook-form
-  const watchSearch = form.watch("searchText");
+  const watchSearch = watch("searchText");
 
   useEffect(() => {
     if (watchSearch === undefined) return;
-    // Set a debounce timer (2s)
+
     const delayDebounce = setTimeout(() => {
-      const search = watchSearch.trim().toLowerCase();
-      setSearchText(search);
+      const search = watchSearch.trim();
 
-      if (search === "") {
-        setFilteredUsers([]);
-      } else {
-        const results = users.filter((user) =>
-          user.name.toLowerCase().includes(search)
-        );
-        setFilteredUsers(results);
-      }
-    }, 2000);
+      if (search === "") return;
 
-    // Cleanup previous timer on re-type
+      searchUser(search);
+    }, 500);
+
     return () => clearTimeout(delayDebounce);
   }, [watchSearch]);
 
@@ -76,8 +50,12 @@ const SearchUser = () => {
         </p>
       </div>
 
+      {/* 🔍 Search Bar */}
       <div className="relative max-w-md mx-auto mb-12">
-        <Search className="absolute left-3 top-6 text-gray-400" size={20} />
+        <Search
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          size={20}
+        />
         <Input
           form={form}
           registerName="searchText"
@@ -86,43 +64,52 @@ const SearchUser = () => {
         />
       </div>
 
-      {searchText && (
+      {loading && <p className="text-center text-gray-500">Loading...</p>}
+
+      {!loading && users?.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredUsers.length > 0 ? (
-            filteredUsers.map((user) => (
-              <Card
-                key={user.id}
-                className="rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 cursor-pointer"
-                onClick={() =>
-                  navigate(
-                    PROTECTED_PATHS.USERS.PROFILE.replace(
-                      ":userId",
-                      user.id.toString()
-                    )
-                  )
-                }
-              >
-                <CardContent className="flex flex-col items-center text-center p-6 space-y-3">
-                  <Avatar className="w-20 h-20">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback>{user.name[0]}</AvatarFallback>
-                  </Avatar>
-                  <h3 className="text-lg font-semibold">{user.name}</h3>
+          {users.map((user: any) => (
+            <Card
+              key={user._id}
+              className="rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 cursor-pointer"
+              onClick={() =>
+                navigate(PROTECTED_PATHS.USERS.PROFILE, {
+                  state: {
+                    user: user,
+                  },
+                })
+              }
+            >
+              <CardContent className="flex flex-col items-center text-center p-6 space-y-3">
+                <Avatar className="w-20 h-20 rounded-full overflow-hidden">
+                  <AvatarImage
+                    src={user.profilePicture}
+                    alt={user.name || "U"}
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                  <AvatarFallback className="rounded-full bg-gray-200 text-gray-600">
+                    {user.name?.[0] || "U"}
+                  </AvatarFallback>
+                </Avatar>
+
+                <h3 className="text-lg font-semibold">{user.name}</h3>
+                {user.bio && (
                   <p className="text-sm text-muted-foreground line-clamp-2">
                     {user.bio}
                   </p>
-                  <Button variant="outline" className="mt-2">
-                    Follow
-                  </Button>
-                </CardContent>
-              </Card>
-            ))
-          ) : (
-            <p className="text-center col-span-full text-muted-foreground">
-              No users found
-            </p>
-          )}
+                )}
+                <Button variant="outline" className="mt-2">
+                  Follow
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
         </div>
+      ) : (
+        !loading &&
+        watchSearch && (
+          <p className="text-center text-muted-foreground">No users found</p>
+        )
       )}
     </div>
   );

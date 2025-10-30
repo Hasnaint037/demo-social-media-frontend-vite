@@ -2,7 +2,7 @@ export const PROTECTED_PATHS = {
   HOME: "/",
   USERS: {
     SEARCH: "/users/search",
-    PROFILE: `/users/:userId`,
+    PROFILE: `/users`,
   },
   POSTS: {
     CREATE: "/posts/create",

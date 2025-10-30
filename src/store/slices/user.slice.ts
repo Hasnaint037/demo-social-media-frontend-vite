@@ -3,8 +3,19 @@ import { axiosInstance } from "@/api";
 import { tryCatchWrapper } from "@/assets/js/tryCatchWrapper";
 import { toast } from "react-toastify";
 
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  profilePicture?: string;
+  bio?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 export interface UserSlice {
   profileLoading: boolean;
+  users: User[];
+
   updateProfile: (
     name: string,
     email: string,
@@ -12,10 +23,13 @@ export interface UserSlice {
     profilePicture?: File | null,
     onSuccess?: () => void
   ) => Promise<void>;
+
+  searchUser: (query: string) => Promise<void>;
 }
 
 export const createUserSlice: StateCreator<UserSlice> = (set) => ({
   profileLoading: false,
+  users: [],
 
   updateProfile: async (name, email, bio, profilePicture, onSuccess) => {
     set({ profileLoading: true });
@@ -49,6 +63,26 @@ export const createUserSlice: StateCreator<UserSlice> = (set) => ({
         }));
         toast.success(data.message);
         onSuccess?.();
+      }
+    ).finally(() => {
+      set({ profileLoading: false });
+    });
+  },
+
+  searchUser: async (query) => {
+    set({ profileLoading: true });
+
+    await tryCatchWrapper(
+      async () => {
+        const res = await axiosInstance.get("/user", {
+          params: {
+            name: query,
+          },
+        });
+        return res.data;
+      },
+      (data: any) => {
+        set({ users: data.data });
       }
     ).finally(() => {
       set({ profileLoading: false });

@@ -18,8 +18,6 @@ const Home = () => {
     }))
   );
 
-  console.log(posts);
-
   useEffect(() => {
     reset();
     getPosts({ page: 1, limit: 10 });
@@ -79,7 +77,7 @@ const Home = () => {
 
       {!pagination?.hasNextPage && !loading && posts.length > 0 && (
         <p className="text-center py-4 text-gray-500 dark:text-gray-400">
-          You've reached the end 🎉
+          No More Posts
         </p>
       )}
     </div>
