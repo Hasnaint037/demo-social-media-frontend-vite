@@ -1,29 +1,7 @@
 import { useState } from "react";
 import { Share2, Trash2 } from "lucide-react";
 import { showConfirmAlert } from "@/assets/alerts/sweetalert";
-
-interface Author {
-  name: string;
-  avatar: string;
-}
-
-interface OriginalPost {
-  author: Author;
-  content: string;
-  images?: string[];
-}
-
-interface Post {
-  _id: string;
-  author: Author;
-  content: string;
-  images?: string[];
-  createdAt: string;
-  likes: number;
-  comments: number;
-  originalPost?: OriginalPost;
-}
-
+import type { Post } from "@/store/slices/post.slice";
 interface PostCardProps {
   post: Post;
   canShare?: boolean;
@@ -38,7 +16,7 @@ const PostCard: React.FC<PostCardProps> = ({
   onDelete,
 }) => {
   const [showAllImages, setShowAllImages] = useState(false);
-  const images = post.images || [];
+  const images = post.media || [];
 
   const handleDeletePost = async (id: string) => {
     const confirmed = await showConfirmAlert({
@@ -111,7 +89,7 @@ const PostCard: React.FC<PostCardProps> = ({
       {/* Author Info */}
       <div className="flex items-center gap-3 mb-3">
         <img
-          src={post.author?.avatar}
+          src={post.author?.profilePicture}
           alt={post.author?.name}
           className="w-10 h-10 rounded-full object-cover"
         />
@@ -136,7 +114,7 @@ const PostCard: React.FC<PostCardProps> = ({
         <div className="border border-gray-300 dark:border-gray-700 rounded-xl p-3 mt-2">
           <div className="flex items-center gap-2 mb-2">
             <img
-              src={post.originalPost.author.avatar}
+              src={post.originalPost.author.profilePicture}
               alt={post.originalPost.author.name}
               className="w-8 h-8 rounded-full object-cover"
             />
@@ -147,8 +125,8 @@ const PostCard: React.FC<PostCardProps> = ({
           <p className="text-gray-700 dark:text-gray-300 text-sm mb-2">
             {post.originalPost.content}
           </p>
-          {post.originalPost.images?.length
-            ? renderImages(post.originalPost.images)
+          {post.originalPost.media?.length
+            ? renderImages(post.originalPost.media)
             : null}
         </div>
       )}
