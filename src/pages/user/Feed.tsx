@@ -61,7 +61,7 @@ const FeedPage = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <div className="text-center mb-8">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white flex items-center justify-center gap-3">
+        <h1 className="text-4xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center justify-center gap-3">
           Your Feed
         </h1>
         <p className="mt-2 text-gray-500 dark:text-gray-400 text-lg md:text-xl">
