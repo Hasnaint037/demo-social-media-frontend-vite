@@ -4,7 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/store";
 import { useShallow } from "zustand/shallow";
-import PostCard from "@/components/common/PostCard";
+import PostCard from "@/pages/post/components/PostCard";
 
 const UserDetail = () => {
   const [isFollowing, setIsFollowing] = useState(false);

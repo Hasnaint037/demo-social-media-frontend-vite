@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useShallow } from "zustand/shallow";
 import { useStore } from "@/store";
-import CreatePost from "@/components/common/CreatePost";
-import PostCard from "@/components/common/PostCard";
+import CreatePost from "@/pages/post/components/CreatePost";
+import PostCard from "@/pages/post/components/PostCard";
 
 const Home = () => {
   const [page, setPage] = useState(1);
