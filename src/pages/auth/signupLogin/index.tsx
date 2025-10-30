@@ -84,7 +84,7 @@ const Signup = () => {
         <Input
           form={form}
           label="Email"
-          type="emai  l"
+          type="email"
           registerName="email"
           required
           registerOptions={{
