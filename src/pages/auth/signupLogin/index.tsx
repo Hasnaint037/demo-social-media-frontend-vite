@@ -35,7 +35,7 @@ const Signup = () => {
       : { email: "", password: "" },
   });
 
-  const { handleSubmit } = form;
+  const { handleSubmit, control } = form;
 
   const onSucces = () => {
     navigate(PROTECTED_PATHS.HOME);
@@ -67,11 +67,11 @@ const Signup = () => {
 
         {isSignup && (
           <Input
-            form={form}
+            control={control}
             label="Full Name"
-            registerName="fullName"
+            name="fullName"
             required
-            registerOptions={{
+            rules={{
               minLength: {
                 value: 3,
                 message: "Full name must be at least 3 characters",
@@ -82,12 +82,12 @@ const Signup = () => {
         )}
 
         <Input
-          form={form}
+          control={control}
           label="Email"
           type="email"
-          registerName="email"
+          name="email"
           required
-          registerOptions={{
+          rules={{
             pattern: {
               value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               message: "Enter a valid email address",
@@ -98,12 +98,12 @@ const Signup = () => {
 
         <div className="mb-8">
           <Input
-            form={form}
+            control={control}
             label="Password"
             type="password"
-            registerName="password"
+            name="password"
             required
-            registerOptions={{
+            rules={{
               minLength: {
                 value: 6,
                 message: "Password must be at least 6 characters",

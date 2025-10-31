@@ -15,7 +15,7 @@ interface FormValues {
 
 const CreatePost: React.FC = () => {
   const form = useForm<FormValues>();
-  const { handleSubmit, reset } = form;
+  const { handleSubmit, reset, control } = form;
   const [isExpanded, setIsExpanded] = useState(false);
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
@@ -66,8 +66,8 @@ const CreatePost: React.FC = () => {
         <div className="flex-1">
           {!isExpanded ? (
             <Input
-              form={form}
-              registerName="caption"
+              control={control}
+              name="caption"
               placeholder={`What's on your mind, ${user?.name.split(" ")[0]}?`}
               onFocus={() => setIsExpanded(true)}
               className="w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-full cursor-pointer outline-none"
