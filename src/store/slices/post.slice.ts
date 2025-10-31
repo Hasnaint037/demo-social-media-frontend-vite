@@ -83,6 +83,8 @@ export const createPostSlice: StateCreator<PostSlice> = (set, get) => ({
         return res.data;
       },
       (data) => {
+        console.log(data, "data");
+
         set((state) => ({
           posts: [data.data, ...state.posts],
         }));

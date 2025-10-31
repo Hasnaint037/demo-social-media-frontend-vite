@@ -20,17 +20,14 @@ const MyPosts = () => {
   );
 
   useEffect(() => {
-    if (user?._id) {
+    if (!user?._id) return;
+    if (page === 1) {
       reset();
       getPosts({ userId: user._id, page: 1, limit: 10 });
-    }
-  }, [user?._id]);
-
-  useEffect(() => {
-    if (page > 1 && user?._id) {
+    } else {
       getPosts({ userId: user._id, page, limit: 10 }, true);
     }
-  }, [page, user?._id]);
+  }, [user?._id, page]);
 
   const lastPostRef = useCallback(
     (node: HTMLDivElement | null) => {

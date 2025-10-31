@@ -19,12 +19,10 @@ const Home = () => {
   );
 
   useEffect(() => {
-    reset();
-    getPosts({ page: 1, limit: 10 });
-  }, []);
-
-  useEffect(() => {
-    if (page > 1) {
+    if (page === 1) {
+      reset();
+      getPosts({ page: 1, limit: 10 });
+    } else {
       getPosts({ page, limit: 10 }, true);
     }
   }, [page]);
