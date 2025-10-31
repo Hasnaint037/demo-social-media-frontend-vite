@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AUTH_PATHS } from "@/routes/paths/authPaths";
 import { useStore } from "@/store";
@@ -17,11 +17,12 @@ interface SignupFormValues {
 const Signup = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { login, signup, loading } = useStore(
+  const { login, signup, loading, reset } = useStore(
     useShallow((store) => ({
       login: store.login,
       signup: store.signup,
       loading: store.isLoading,
+      reset: store.resetUser,
     }))
   );
 
@@ -53,6 +54,10 @@ const Signup = () => {
       signup(data.fullName, data.email, data.password, onSucces);
     }
   };
+
+  useEffect(() => {
+    reset();
+  }, []);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
