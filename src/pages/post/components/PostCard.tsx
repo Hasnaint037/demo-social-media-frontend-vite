@@ -7,23 +7,27 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useShallow } from "zustand/shallow";
 
 interface PostCardProps {
   post: Post;
   canShare?: boolean;
   canDelete?: boolean;
-  onDelete?: (postId: string) => void;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
   post,
   canShare = true,
   canDelete = false,
-  onDelete,
 }) => {
   const navigate = useNavigate();
-  const toggleLike = useStore((state) => state.toggleLike);
-  const user = useStore((state) => state.user);
+  const { toggleLike, user, deletePost } = useStore(
+    useShallow((store) => ({
+      toggleLike: store.toggleLike,
+      user: store.user,
+      deletePost: store.deletePost,
+    }))
+  );
   const [processingLike, setProcessingLike] = useState<boolean>(false);
   const [showAllImages, setShowAllImages] = useState<boolean>(false);
 
@@ -44,7 +48,7 @@ const PostCard: React.FC<PostCardProps> = ({
       text: "Do you want to delete this post?",
       confirmButtonText: "Delete",
     });
-    if (confirmed) onDelete?.(id);
+    if (confirmed) deletePost(id);
   };
 
   const renderImages = (imgs: string[]) => {

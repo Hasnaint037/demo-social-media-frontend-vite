@@ -47,9 +47,11 @@ export interface PostSlice {
   ) => Promise<void>;
 
   toggleLike: (postId: string, userId: string) => Promise<void>;
+
+  deletePost: (postId: string) => Promise<void>;
 }
 
-export const createPostSlice: StateCreator<PostSlice> = (set) => ({
+export const createPostSlice: StateCreator<PostSlice> = (set, get) => ({
   posts: [],
   pagination: {},
   postLoading: false,
@@ -152,6 +154,27 @@ export const createPostSlice: StateCreator<PostSlice> = (set) => ({
           });
           return { posts: updatedPosts };
         });
+      }
+    );
+  },
+
+  deletePost: async (postId: string) => {
+    const previousPosts = get().posts;
+    set((state) => ({
+      posts: state.posts.filter((post) => post._id !== postId),
+    }));
+
+    await tryCatchWrapper(
+      async () => {
+        const res = await axiosInstance.delete(`/post/${postId}`);
+        return res.data;
+      },
+      (data) => {
+        toast.success(data.message);
+      },
+      () => {
+        set({ posts: previousPosts });
+        toast.error("Failed to delete post!");
       }
     );
   },
