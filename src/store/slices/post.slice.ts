@@ -49,6 +49,12 @@ export interface PostSlice {
   toggleLike: (postId: string, userId: string) => Promise<void>;
 
   deletePost: (postId: string) => Promise<void>;
+
+  sharePost: (
+    postId: string,
+    content: string,
+    onSuccess?: () => void
+  ) => Promise<void>;
 }
 
 export const createPostSlice: StateCreator<PostSlice> = (set, get) => ({
@@ -83,8 +89,6 @@ export const createPostSlice: StateCreator<PostSlice> = (set, get) => ({
         return res.data;
       },
       (data) => {
-        console.log(data, "data");
-
         set((state) => ({
           posts: [data.data, ...state.posts],
         }));
@@ -182,5 +186,26 @@ export const createPostSlice: StateCreator<PostSlice> = (set, get) => ({
         toast.error("Failed to delete post!");
       }
     );
+  },
+
+  sharePost: async (postId, content, onSuccess) => {
+    set({ postLoading: true });
+
+    await tryCatchWrapper(
+      async () => {
+        const payload = { content };
+        const res = await axiosInstance.post(
+          `/post/share-post/${postId}`,
+          payload
+        );
+        return res.data;
+      },
+      (data) => {
+        toast.success(data.message);
+        onSuccess?.();
+      }
+    ).finally(() => {
+      set({ postLoading: false });
+    });
   },
 });

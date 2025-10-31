@@ -54,7 +54,7 @@ const Home = () => {
             </div>
           );
         }
-        return <PostCard key={post._id} post={post} canShare={true} />;
+        return <PostCard key={post?._id} post={post} canShare={true} />;
       })}
 
       {loading && (

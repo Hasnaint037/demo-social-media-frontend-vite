@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { PROTECTED_PATHS } from "@/routes/paths/protectedPaths";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useShallow } from "zustand/shallow";
+import SharePostModal from "./SharePostModal";
 
 interface PostCardProps {
   post: Post;
@@ -30,6 +31,7 @@ const PostCard: React.FC<PostCardProps> = ({
   );
   const [processingLike, setProcessingLike] = useState<boolean>(false);
   const [showAllImages, setShowAllImages] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
 
   if (!user) return null;
 
@@ -198,11 +200,20 @@ const PostCard: React.FC<PostCardProps> = ({
         </button>
 
         {canShare && (
-          <button className="flex items-center gap-1 hover:text-blue-500 cursor-pointer">
+          <button
+            className="flex items-center gap-1 hover:text-blue-500 cursor-pointer"
+            onClick={() => setOpen(true)}
+          >
             <Share2 size={18} /> Share
           </button>
         )}
       </div>
+
+      <SharePostModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        post={post}
+      />
     </motion.div>
   );
 };
