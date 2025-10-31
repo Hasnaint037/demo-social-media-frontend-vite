@@ -16,6 +16,7 @@ const ForgotPassword = () => {
       email: "",
     },
   });
+  const { control } = form;
 
   const { forgotPassword, loading } = useStore(
     useShallow((store) => ({
@@ -46,13 +47,13 @@ const ForgotPassword = () => {
           className="flex flex-col gap-4"
         >
           <Input
-            form={form}
+            control={control}
             label="Email"
-            registerName="email"
+            name="email"
             type="email"
             required
             placeholder="Enter your email address"
-            registerOptions={{
+            rules={{
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 message: "Please enter a valid email address",

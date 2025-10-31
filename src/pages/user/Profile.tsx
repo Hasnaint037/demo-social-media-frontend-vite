@@ -37,6 +37,7 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
   const {
     handleSubmit,
     reset,
+    control,
     formState: { isDirty },
   } = form;
 
@@ -99,10 +100,10 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
 
         <div className="w-full">
           <Input
-            form={form}
+            control={control}
             required={!isViewMode}
             label="Name"
-            registerName="name"
+            name="name"
             id="name"
             type="text"
             placeholder="Enter your name"
@@ -112,10 +113,10 @@ const Profile: React.FC<ProfileProps> = ({ open, setOpen, isViewMode }) => {
 
         <div className="w-full">
           <Input
-            form={form}
+            control={control}
             required={!isViewMode}
             label="Email"
-            registerName="email"
+            name="email"
             id="email"
             type="email"
             placeholder="Enter your email"

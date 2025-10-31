@@ -12,7 +12,7 @@ import { useShallow } from "zustand/shallow";
 
 const SearchUser = () => {
   const form = useForm();
-  const { watch } = form;
+  const { watch, control } = form;
   const navigate = useNavigate();
 
   const { searchUser, users, loading } = useStore(
@@ -57,8 +57,8 @@ const SearchUser = () => {
           size={20}
         />
         <Input
-          form={form}
-          registerName="searchText"
+          control={control}
+          name="searchText"
           placeholder="Search users..."
           className="pl-10 py-5 text-base"
         />
