@@ -3,6 +3,7 @@ import { useShallow } from "zustand/shallow";
 import { useStore } from "@/store";
 import CreatePost from "@/pages/post/components/CreatePost";
 import PostCard from "@/pages/post/components/PostCard";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 const MyPosts = () => {
   const [page, setPage] = useState(1);
@@ -29,21 +30,11 @@ const MyPosts = () => {
     }
   }, [user?._id, page]);
 
-  const lastPostRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (loading) return;
-      if (observerRef.current) observerRef.current.disconnect();
-
-      observerRef.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && pagination?.hasNextPage) {
-          setPage((prev) => prev + 1);
-        }
-      });
-
-      if (node) observerRef.current.observe(node);
-    },
-    [loading, pagination]
-  );
+  const { lastElementRef } = useInfiniteScroll({
+    loading,
+    hasNextPage: pagination?.hasNextPage ?? false,
+    onLoadMore: () => setPage((prev) => prev + 1),
+  });
 
   return (
     <div className="max-w-2xl mx-auto mt-6 px-4">
@@ -57,7 +48,7 @@ const MyPosts = () => {
 
       {posts.map((post, index) =>
         index === posts.length - 1 ? (
-          <div ref={lastPostRef} key={post._id}>
+          <div ref={lastElementRef} key={post._id}>
             <PostCard post={post} canShare canDelete />
           </div>
         ) : (
