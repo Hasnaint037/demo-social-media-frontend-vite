@@ -82,8 +82,11 @@ export const createPostSlice: StateCreator<PostSlice> = (set, get) => ({
 
         return res.data;
       },
-      () => {
-        toast.success("Post created successfully!");
+      (data) => {
+        set((state) => ({
+          posts: [data.data, ...state.posts],
+        }));
+        toast.success(data.message);
         onSuccess?.();
       }
     ).finally(() => {

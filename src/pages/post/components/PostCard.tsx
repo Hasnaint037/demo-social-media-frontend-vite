@@ -33,7 +33,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
   if (!user) return null;
 
-  const likedByCurrentUser = post.likesData.includes(user._id);
+  const likedByCurrentUser = post?.likesData?.includes(user._id);
 
   const handleLike = async () => {
     if (processingLike) return;
