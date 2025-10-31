@@ -24,7 +24,8 @@ const PostCard: React.FC<PostCardProps> = ({
   const navigate = useNavigate();
   const toggleLike = useStore((state) => state.toggleLike);
   const user = useStore((state) => state.user);
-  const [processingLike, setProcessingLike] = useState(false);
+  const [processingLike, setProcessingLike] = useState<boolean>(false);
+  const [showAllImages, setShowAllImages] = useState<boolean>(false);
 
   if (!user) return null;
 
@@ -44,6 +45,63 @@ const PostCard: React.FC<PostCardProps> = ({
       confirmButtonText: "Delete",
     });
     if (confirmed) onDelete?.(id);
+  };
+
+  const renderImages = (imgs: string[]) => {
+    if (!imgs || imgs.length === 0) return null;
+
+    if (imgs.length === 1) {
+      return (
+        <img
+          src={imgs[0]}
+          alt="post"
+          className="w-full h-64 object-cover rounded-xl mb-3"
+        />
+      );
+    }
+
+    if (imgs.length === 2 || (imgs.length > 2 && showAllImages)) {
+      return (
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          {imgs.map((img, i) => (
+            <img
+              key={i}
+              src={img}
+              alt={`post-${i}`}
+              className="w-full h-56 object-cover rounded-xl"
+            />
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-2 gap-2 mb-3 relative">
+        <img
+          src={imgs[0]}
+          alt="post-0"
+          className="w-full h-56 object-cover rounded-xl"
+        />
+        <div
+          className="relative cursor-pointer"
+          onClick={() => setShowAllImages(true)}
+        >
+          <div
+            className="relative cursor-pointer"
+            onClick={() => setShowAllImages(true)}
+          >
+            <img
+              src={imgs[1]}
+              alt="post-1"
+              className="w-full h-56 object-cover rounded-xl filter blur-[1.5px] brightness-75"
+            />
+            <div className="absolute inset-0 flex items-center justify-center text-white font-semibold text-lg">
+              +{imgs.length - 2}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -88,6 +146,33 @@ const PostCard: React.FC<PostCardProps> = ({
 
       {post.content && (
         <p className="text-gray-800 dark:text-gray-200 mb-3">{post.content}</p>
+      )}
+
+      {renderImages(post.media)}
+
+      {post.originalPost && (
+        <div className="border border-gray-300 dark:border-gray-700 rounded-xl p-3 mt-3 bg-gray-50 dark:bg-gray-800">
+          <div className="flex items-center gap-2 mb-2">
+            <Avatar className="w-8 h-8 rounded-full overflow-hidden">
+              <AvatarImage src={post.originalPost.author.profilePicture} />
+              <AvatarFallback>
+                {post.originalPost.author.name?.[0] || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                {post.originalPost.author.name}
+              </p>
+              <span className="text-xs text-gray-500">
+                {new Date(post.originalPost.createdAt).toLocaleString()}
+              </span>
+            </div>
+          </div>
+          <p className="text-gray-700 dark:text-gray-300 text-sm mb-2">
+            {post.originalPost.content}
+          </p>
+          {renderImages(post.originalPost.media)}
+        </div>
       )}
 
       <div className="flex justify-between items-center mt-4 text-gray-600 dark:text-gray-400">
