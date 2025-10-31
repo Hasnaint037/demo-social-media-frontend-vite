@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useShallow } from "zustand/shallow";
 import { useStore } from "@/store";
 import CreatePost from "@/pages/post/components/CreatePost";
@@ -7,7 +7,6 @@ import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 const MyPosts = () => {
   const [page, setPage] = useState(1);
-  const observerRef = useRef<IntersectionObserver | null>(null);
 
   const { user, getPosts, posts, loading, pagination, reset } = useStore(
     useShallow((state) => ({
