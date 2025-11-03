@@ -12,9 +12,11 @@ export interface User {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
 export interface UserSlice {
   profileLoading: boolean;
   users: User[];
+  isFollowingMap: Record<string, boolean>;
 
   updateProfile: (
     name: string,
@@ -25,11 +27,14 @@ export interface UserSlice {
   ) => Promise<void>;
 
   searchUser: (query: string) => Promise<void>;
+  followUser: (targetUserId: string) => Promise<void>;
+  checkIsFollowing: (targetUserId: string) => Promise<void>;
 }
 
 export const createUserSlice: StateCreator<UserSlice> = (set) => ({
   profileLoading: false,
   users: [],
+  isFollowingMap: {},
 
   updateProfile: async (name, email, bio, profilePicture, onSuccess) => {
     set({ profileLoading: true });
@@ -75,9 +80,7 @@ export const createUserSlice: StateCreator<UserSlice> = (set) => ({
     await tryCatchWrapper(
       async () => {
         const res = await axiosInstance.get("/user", {
-          params: {
-            name: query,
-          },
+          params: { name: query },
         });
         return res.data;
       },
@@ -87,5 +90,41 @@ export const createUserSlice: StateCreator<UserSlice> = (set) => ({
     ).finally(() => {
       set({ profileLoading: false });
     });
+  },
+
+  followUser: async (targetUserId) => {
+    await tryCatchWrapper(
+      async () => {
+        const res = await axiosInstance.post(`user/${targetUserId}`);
+        return res.data;
+      },
+      () => {
+        set((state) => ({
+          isFollowingMap: {
+            ...state.isFollowingMap,
+            [targetUserId]: !state.isFollowingMap[targetUserId],
+          },
+        }));
+      }
+    );
+  },
+
+  checkIsFollowing: async (targetUserId) => {
+    await tryCatchWrapper(
+      async () => {
+        const res = await axiosInstance.get(
+          `user/${targetUserId}/is-following`
+        );
+        return res.data;
+      },
+      (data: any) => {
+        set((state) => ({
+          isFollowingMap: {
+            ...state.isFollowingMap,
+            [targetUserId]: data.isFollowing,
+          },
+        }));
+      }
+    );
   },
 });

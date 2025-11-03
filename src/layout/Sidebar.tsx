@@ -75,7 +75,8 @@ const AppSidebar = () => {
               location.pathname === item.url ||
               item.PATHLISTS?.some((path) => location.pathname.includes(path));
             return (
-              <SidebarMenuItem
+              <NavLink
+                to={item.url}
                 key={item.title}
                 className={`
               flex items-center gap-2 rounded-md mb-2 cursor-pointer transition-colors duration-300 py-3
@@ -86,14 +87,11 @@ const AppSidebar = () => {
               }
             `}
               >
-                <NavLink
-                  to={item.url}
-                  className="flex items-center gap-2 w-full"
-                >
+                <div className="flex items-center gap-2 w-full px-3">
                   <item.icon />
                   <span>{item.title}</span>
-                </NavLink>
-              </SidebarMenuItem>
+                </div>
+              </NavLink>
             );
           })}
         </div>
