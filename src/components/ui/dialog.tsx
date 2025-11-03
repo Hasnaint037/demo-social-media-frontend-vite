@@ -21,7 +21,6 @@ export function Dialog({
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onClose}>
       <DialogPrimitive.Portal>
-        {/* 🔹 Overlay */}
         <DialogPrimitive.Overlay
           className={cn(
             "fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0"
