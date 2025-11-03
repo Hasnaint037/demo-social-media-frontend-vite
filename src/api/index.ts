@@ -15,7 +15,7 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     if (error.response && error.response.status === 401) {
-      toast.info("Token Expired");
+      toast.info("Token Expired.");
       window.location.href = "/login";
       localStorage.removeItem("user");
     }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
+import { motion } from "framer-motion";
 
 const ScrollToTopButton = () => {
   const [visible, setVisible] = useState(false);
@@ -28,12 +29,20 @@ const ScrollToTopButton = () => {
 
   return (
     visible && (
-      <button
+      <motion.button
+        initial={{ scale: 0.7 }}
+        animate={{ scale: 1.3 }}
+        transition={{
+          duration: 1,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
         onClick={scrollToTop}
         className="fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 z-50 cursor-pointer"
       >
         <ArrowUp size={20} />
-      </button>
+      </motion.button>
     )
   );
 };
