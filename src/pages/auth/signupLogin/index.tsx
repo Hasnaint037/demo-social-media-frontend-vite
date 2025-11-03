@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AUTH_PATHS } from "@/routes/paths/authPaths";
 import { useStore } from "@/store";
@@ -17,11 +17,12 @@ interface SignupFormValues {
 const Signup = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { login, signup, loading } = useStore(
+  const { login, signup, loading, reset } = useStore(
     useShallow((store) => ({
       login: store.login,
       signup: store.signup,
       loading: store.isLoading,
+      reset: store.resetUser,
     }))
   );
 
@@ -35,7 +36,7 @@ const Signup = () => {
       : { email: "", password: "" },
   });
 
-  const { handleSubmit } = form;
+  const { handleSubmit, control } = form;
 
   const onSucces = () => {
     navigate(PROTECTED_PATHS.HOME);
@@ -54,6 +55,10 @@ const Signup = () => {
     }
   };
 
+  useEffect(() => {
+    reset();
+  }, []);
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
       <form
@@ -67,11 +72,11 @@ const Signup = () => {
 
         {isSignup && (
           <Input
-            form={form}
+            control={control}
             label="Full Name"
-            registerName="fullName"
+            name="fullName"
             required
-            registerOptions={{
+            rules={{
               minLength: {
                 value: 3,
                 message: "Full name must be at least 3 characters",
@@ -82,12 +87,12 @@ const Signup = () => {
         )}
 
         <Input
-          form={form}
+          control={control}
           label="Email"
           type="email"
-          registerName="email"
+          name="email"
           required
-          registerOptions={{
+          rules={{
             pattern: {
               value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               message: "Enter a valid email address",
@@ -98,12 +103,12 @@ const Signup = () => {
 
         <div className="mb-8">
           <Input
-            form={form}
+            control={control}
             label="Password"
             type="password"
-            registerName="password"
+            name="password"
             required
-            registerOptions={{
+            rules={{
               minLength: {
                 value: 6,
                 message: "Password must be at least 6 characters",

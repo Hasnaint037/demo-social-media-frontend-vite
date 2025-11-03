@@ -20,6 +20,7 @@ const ResetPassword = () => {
       confirmPassword: "",
     },
   });
+  const { control } = form;
 
   const { resetPassword } = useStore(
     useShallow((store) => ({
@@ -50,13 +51,13 @@ const ResetPassword = () => {
         >
           {/* New Password */}
           <Input
-            form={form}
+            control={control}
             label="New Password"
-            registerName="newPassword"
+            name="newPassword"
             type="password"
             required
             placeholder="Enter your new password"
-            registerOptions={{
+            rules={{
               minLength: {
                 value: 6,
                 message: "Password must be at least 6 characters long",
@@ -66,13 +67,13 @@ const ResetPassword = () => {
 
           {/* Confirm Password */}
           <Input
-            form={form}
+            control={control}
             label="Confirm Password"
-            registerName="confirmPassword"
+            name="confirmPassword"
             type="password"
             required
             placeholder="Re-enter your new password"
-            registerOptions={{
+            rules={{
               validate: (value) =>
                 value === form.getValues("newPassword") ||
                 "Passwords do not match",

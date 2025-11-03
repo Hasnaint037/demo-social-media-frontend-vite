@@ -12,14 +12,26 @@ import { useShallow } from "zustand/shallow";
 
 const SearchUser = () => {
   const form = useForm();
-  const { watch } = form;
+  const { watch, control } = form;
   const navigate = useNavigate();
 
-  const { searchUser, users, loading } = useStore(
+  const {
+    user,
+    users,
+    searchUser,
+    followUser,
+    checkIsFollowing,
+    isFollowingMap,
+    profileLoading: loading,
+  } = useStore(
     useShallow((store) => ({
+      user: store.user,
+      users: store.users,
       searchUser: store.searchUser,
-      users: store.users || [],
-      loading: store.profileLoading,
+      followUser: store.followUser,
+      checkIsFollowing: store.checkIsFollowing,
+      isFollowingMap: store.isFollowingMap,
+      profileLoading: store.profileLoading,
     }))
   );
 
@@ -30,14 +42,21 @@ const SearchUser = () => {
 
     const delayDebounce = setTimeout(() => {
       const search = watchSearch.trim();
-
       if (search === "") return;
-
       searchUser(search);
     }, 500);
 
     return () => clearTimeout(delayDebounce);
   }, [watchSearch]);
+
+  useEffect(() => {
+    if (!users?.length) return;
+    users.forEach((u: any) => {
+      if (u._id !== user?._id && isFollowingMap[u._id] === undefined) {
+        checkIsFollowing(u._id);
+      }
+    });
+  }, [users]);
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-10">
@@ -50,15 +69,14 @@ const SearchUser = () => {
         </p>
       </div>
 
-      {/* 🔍 Search Bar */}
       <div className="relative max-w-md mx-auto mb-12">
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
           size={20}
         />
         <Input
-          form={form}
-          registerName="searchText"
+          control={control}
+          name="searchText"
           placeholder="Search users..."
           className="pl-10 py-5 text-base"
         />
@@ -68,42 +86,55 @@ const SearchUser = () => {
 
       {!loading && users?.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {users.map((user: any) => (
-            <Card
-              key={user._id}
-              className="rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 cursor-pointer"
-              onClick={() =>
-                navigate(PROTECTED_PATHS.USERS.PROFILE, {
-                  state: {
-                    user: user,
-                  },
-                })
-              }
-            >
-              <CardContent className="flex flex-col items-center text-center p-6 space-y-3">
-                <Avatar className="w-20 h-20 rounded-full overflow-hidden">
-                  <AvatarImage
-                    src={user.profilePicture}
-                    alt={user.name || "U"}
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                  <AvatarFallback className="rounded-full bg-gray-200 text-gray-600">
-                    {user.name?.[0] || "U"}
-                  </AvatarFallback>
-                </Avatar>
+          {users.map((u: any) => {
+            const isFollowing = isFollowingMap[u._id] || false;
+            const isSelf = user?._id === u._id;
 
-                <h3 className="text-lg font-semibold">{user.name}</h3>
-                {user.bio && (
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {user.bio}
-                  </p>
-                )}
-                <Button variant="outline" className="mt-2">
-                  Follow
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+            return (
+              <Card
+                key={u._id}
+                className="rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 cursor-pointer"
+                onClick={() =>
+                  navigate(PROTECTED_PATHS.USERS.PROFILE, {
+                    state: { user: u },
+                  })
+                }
+              >
+                <CardContent className="flex flex-col items-center text-center p-6 space-y-3">
+                  <Avatar className="w-20 h-20 rounded-full overflow-hidden">
+                    <AvatarImage
+                      src={u.profilePicture}
+                      alt={u.name || "U"}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                    <AvatarFallback className="rounded-full bg-gray-200 text-gray-600">
+                      {u.name?.[0] || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <h3 className="text-lg font-semibold">{u.name}</h3>
+                  {u.bio && (
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {u.bio}
+                    </p>
+                  )}
+
+                  {!isSelf && (
+                    <Button
+                      variant="outline"
+                      className="mt-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        followUser(u._id);
+                      }}
+                    >
+                      {isFollowing ? "Following" : "Follow"}
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       ) : (
         !loading &&

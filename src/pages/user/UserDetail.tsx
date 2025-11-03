@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { useStore } from "@/store";
 import { useShallow } from "zustand/shallow";
 import PostCard from "@/pages/post/components/PostCard";
 
 const UserDetail = () => {
-  const [isFollowing, setIsFollowing] = useState(false);
+  // const [isFollowing, setIsFollowing] = useState(false);
   const [page, setPage] = useState(1);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -81,12 +81,12 @@ const UserDetail = () => {
           )}
         </div>
 
-        <Button
+        {/* <Button
           onClick={() => setIsFollowing((prev) => !prev)}
           variant="outline"
         >
           {isFollowing ? "Following" : "Follow"}
-        </Button>
+        </Button> */}
       </div>
 
       <div>

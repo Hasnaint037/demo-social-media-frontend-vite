@@ -1,12 +1,12 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useShallow } from "zustand/shallow";
 import { useStore } from "@/store";
 import CreatePost from "@/pages/post/components/CreatePost";
 import PostCard from "@/pages/post/components/PostCard";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 const MyPosts = () => {
   const [page, setPage] = useState(1);
-  const observerRef = useRef<IntersectionObserver | null>(null);
 
   const { user, getPosts, posts, loading, pagination, reset } = useStore(
     useShallow((state) => ({
@@ -20,33 +20,20 @@ const MyPosts = () => {
   );
 
   useEffect(() => {
-    if (user?._id) {
+    if (!user?._id) return;
+    if (page === 1) {
       reset();
       getPosts({ userId: user._id, page: 1, limit: 10 });
-    }
-  }, [user?._id]);
-
-  useEffect(() => {
-    if (page > 1 && user?._id) {
+    } else {
       getPosts({ userId: user._id, page, limit: 10 }, true);
     }
-  }, [page, user?._id]);
+  }, [user?._id, page]);
 
-  const lastPostRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (loading) return;
-      if (observerRef.current) observerRef.current.disconnect();
-
-      observerRef.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && pagination?.hasNextPage) {
-          setPage((prev) => prev + 1);
-        }
-      });
-
-      if (node) observerRef.current.observe(node);
-    },
-    [loading, pagination]
-  );
+  const { lastElementRef } = useInfiniteScroll({
+    loading,
+    hasNextPage: pagination?.hasNextPage ?? false,
+    onLoadMore: () => setPage((prev) => prev + 1),
+  });
 
   return (
     <div className="max-w-2xl mx-auto mt-6 px-4">
@@ -60,7 +47,7 @@ const MyPosts = () => {
 
       {posts.map((post, index) =>
         index === posts.length - 1 ? (
-          <div ref={lastPostRef} key={post._id}>
+          <div ref={lastElementRef} key={post._id}>
             <PostCard post={post} canShare canDelete />
           </div>
         ) : (
