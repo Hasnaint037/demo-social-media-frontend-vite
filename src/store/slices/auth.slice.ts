@@ -37,6 +37,8 @@ export interface AuthSlice {
     token: string,
     onSuccess: () => void
   ) => Promise<void>;
+
+  resetUser: () => void;
 }
 
 export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
@@ -139,5 +141,9 @@ export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
     ).finally(() => {
       set({ isLoading: false });
     });
+  },
+
+  resetUser: () => {
+    set({ user: null });
   },
 });

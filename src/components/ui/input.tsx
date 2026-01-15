@@ -1,75 +1,52 @@
 import * as React from "react";
 import {
   useController,
-  type UseFormReturn,
+  type Control,
   type RegisterOptions,
 } from "react-hook-form";
 
-interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "form"> {
-  form?: UseFormReturn<any>;
-  registerName: string;
-  registerOptions?: RegisterOptions;
+interface BaseInputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "name"> {
   label?: string;
   required?: boolean;
+  className?: string;
+}
+
+interface ControlledInputProps extends BaseInputProps {
+  control: Control<any>;
+  name: string;
+  rules?: RegisterOptions;
+}
+
+interface UncontrolledInputProps extends BaseInputProps {
   value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input: React.FC<InputProps> = ({
-  type = "text",
-  form,
-  registerName,
-  registerOptions,
-  className,
+const ControlledInput: React.FC<ControlledInputProps> = ({
+  control,
+  name,
+  rules,
   label,
   required = true,
-  value: propValue,
-  onChange: propOnChange,
+  className,
+  type = "text",
   ...props
 }) => {
-  let inputValue = propValue ?? "";
-  let handleChange = propOnChange;
-  let handleBlur: ((e: React.FocusEvent<HTMLInputElement>) => void) | undefined;
-  let inputRef: React.Ref<HTMLInputElement> | undefined;
-  let error: any = null;
-
-  if (form) {
-    const {
-      control,
-      formState: { errors },
-    } = form;
-
-    const mergedRules: RegisterOptions = {
-      ...registerOptions,
-      ...(required && !registerOptions?.required
-        ? { required: `${label || registerName} is required` }
+  const {
+    field: { onChange, onBlur, value, ref },
+    fieldState: { error },
+  } = useController({
+    name,
+    control,
+    rules: {
+      ...rules,
+      ...(required && !rules?.required
+        ? { required: `${label || name} is required` }
         : {}),
-    };
-
-    const {
-      field: { onChange, onBlur, value, ref },
-    } = useController({
-      name: registerName,
-      control,
-      rules: mergedRules,
-      defaultValue: "",
-    });
-
-    inputValue = value ?? "";
-    handleChange = onChange;
-    handleBlur = onBlur;
-    inputRef = ref;
-    error = errors?.[registerName];
-  } else {
-    const [internalValue, setInternalValue] = React.useState("");
-
-    inputValue = propValue ?? internalValue;
-    handleChange =
-      propOnChange ??
-      ((e: React.ChangeEvent<HTMLInputElement>) =>
-        setInternalValue(e.target.value));
-  }
+    },
+    defaultValue: "",
+  });
 
   return (
     <div className="flex flex-col gap-1">
@@ -79,14 +56,12 @@ const Input: React.FC<InputProps> = ({
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
-
       <input
+        ref={ref}
         type={type}
-        ref={inputRef}
-        value={inputValue}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        data-slot="input"
+        value={value ?? ""}
+        onChange={onChange}
+        onBlur={onBlur}
         className={`px-3 py-2 border rounded-md w-full 
           focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 
           transition duration-150 ease-in-out ${
@@ -94,14 +69,58 @@ const Input: React.FC<InputProps> = ({
           } ${className || ""}`}
         {...props}
       />
-
       {error && (
         <p className="text-sm text-red-400">
-          {(error as any)?.message || "Invalid input"}
+          {error.message || "Invalid input"}
         </p>
       )}
     </div>
   );
+};
+
+const UncontrolledInput: React.FC<UncontrolledInputProps> = ({
+  value: propValue,
+  onChange: propOnChange,
+  label,
+  required = true,
+  className,
+  type = "text",
+  ...props
+}) => {
+  const [value, setValue] = React.useState(propValue ?? "");
+
+  const handleChange =
+    propOnChange ??
+    ((e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value));
+
+  return (
+    <div className="flex flex-col gap-1">
+      {label && (
+        <label className="font-medium text-gray-700">
+          {label}
+          {required && <span className="text-red-500 ml-1">*</span>}
+        </label>
+      )}
+      <input
+        type={type}
+        value={value}
+        onChange={handleChange}
+        className={`px-3 py-2 border rounded-md w-full 
+          focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 
+          transition duration-150 ease-in-out ${className || ""}`}
+        {...props}
+      />
+    </div>
+  );
+};
+
+const Input: React.FC<
+  ControlledInputProps | (UncontrolledInputProps & { name?: string })
+> = (props) => {
+  if ("control" in props && props.control && "name" in props) {
+    return <ControlledInput {...(props as ControlledInputProps)} />;
+  }
+  return <UncontrolledInput {...(props as UncontrolledInputProps)} />;
 };
 
 export { Input };

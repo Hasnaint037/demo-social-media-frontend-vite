@@ -55,7 +55,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
 
   if (isMobile) {
     return (
-      <div className="fixed inset-0 z-50 pointer-events-none  ">
+      <div className="fixed inset-0 z-50 pointer-events-none">
         {/* Overlay */}
         <div
           className={cn(
@@ -83,7 +83,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
   return (
     <aside
       className={cn(
-        "bg-white h-screen p-4 transition-all duration-200 shadow-md border-r-2",
+        "bg-white h-screen p-4 transition-all duration-200 shadow-md border-r-2 dark:bg-gray-800",
         open ? "w-[18rem]" : "w-14"
       )}
     >
